@@ -38,6 +38,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import YouTube from 'react-youtube';
 import useResizeObserver from '@react-hook/resize-observer';
 import exifr from 'exifr'
+import { div } from 'framer-motion/client'
 
 
 let thumbnailVariants: any = {
@@ -88,6 +89,11 @@ const usePrevious = (value) => {
   return ref.current;
 }
 
+interface ImageDetails {
+  heading?: string,
+  content?: string[],
+}
+
 interface SlideItem {
   src?: any,
   original?: string,
@@ -95,6 +101,10 @@ interface SlideItem {
   alt?: string,
   loaded?: boolean,
   thumbnailSrc?: string,
+  captionTitle?: string,
+  captionQuote?: string,
+  captionDescription?: string,
+  imageDetails?: ImageDetails[],
 }
 
 interface ImageElement {
@@ -417,14 +427,14 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
   const [isLoading, setIsLoading] = useState(true);
   const [noWindow, setNoWindow] = useState(props.noWindow ? props.noWindow : false)
 
-  
+
   const [touchStart, setTouchStart] = useState<any>(0)
   const [touchEnd, setTouchEnd] = useState<any>(0)
 
   const [mouseStartX, setMouseStartX] = useState<any>(0)
   const [mouseStartY, setMouseStartY] = useState<any>(0)
 
-  const minimumSwipeDistance = 50 
+  const minimumSwipeDistance = 50
 
   const onTouchStart = (e) => {
     setTouchEnd(null)
@@ -445,7 +455,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
         }
         else if (isRightSwipe) {
           prevSlide();
-        } 
+        }
       }
     }
 
@@ -462,11 +472,11 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
     if (imgAnimation == "fade" && zoomedIn == false) {
       const differenceX = Math.abs(event.pageX - mouseStartX);
-    
+
       if (differenceX > delta) {
         const isLeftDragMotion = (mouseStartX - event.pageX) > delta;
         const isRightDragMotion = (mouseStartX - event.pageX) < -delta;
-        
+
         if (isLeftDragMotion) {
           nextSlide();
         }
@@ -505,14 +515,15 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
   }
 
   const scrollPrev = useCallback(() => {
-    if (emblaApi) { emblaApi.scrollPrev();
+    if (emblaApi) {
+      emblaApi.scrollPrev();
     }
 
   }, [emblaApi])
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
-      emblaApi.scrollNext() 
+      emblaApi.scrollNext()
 
     }
   }, [emblaApi])
@@ -685,12 +696,13 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     setIsBrowserFullScreen(false)
   }
 
-  const emblaSlideSelect = useCallback((emblaApi) => {    
+  const emblaSlideSelect = useCallback((emblaApi) => {
   }, [])
 
-  useEffect(() => {    
-    if (emblaApi) emblaApi.on('slidesInView', emblaSlideSelect)  }, 
-  [emblaApi, emblaSlideSelect])
+  useEffect(() => {
+    if (emblaApi) emblaApi.on('slidesInView', emblaSlideSelect)
+  },
+    [emblaApi, emblaSlideSelect])
 
 
   const updateImageSlideshow = (newDirection) => {
@@ -1036,7 +1048,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     let style = {};
     if (isImageCaption()) {
       if (showThumbnails) {
-        style["height"] = "21vh" 
+        style["height"] = "21vh"
       }
       else {
         style["height"] = "12vh"
@@ -1285,7 +1297,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
       imageElem = (
         <img
           className={`imageModal ${props.imgElemClassname ? props.imgElemClassname : ''}
-        ${ styles.lightboxImg} 
+        ${styles.lightboxImg} 
         ${enableMagnifyingGlass
               ? styles.maxWidthFull
               : styles.maxWidthWithoutMagnifier
@@ -1324,14 +1336,14 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
   const getCloseIconBtnStyle = () => {
     let style_object = {}
     if (iconColor) {
-      style_object =  { color: iconColor }
+      style_object = { color: iconColor }
     }
     if (props.closeIconBtnStyle) {
       let closeIconBtnStyleKeys = Object.keys(props.closeIconBtnStyle)
       for (let i = 0; i < closeIconBtnStyleKeys.length; i++) {
         let keyName = closeIconBtnStyleKeys[i];
         let style_obj = props.closeIconBtnStyle[keyName]
-        style_object[keyName] =  style_obj;
+        style_object[keyName] = style_obj;
       }
     }
     return style_object;
@@ -1377,8 +1389,8 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     }
     else if (isPictureElement(index)) {
       let elem_metadata = props.images[index]["picture"];
-      return <picture className={`imageModal 
-      ${styles.lightboxImg} 
+      return <picture className={`imageModal
+      ${styles.lightboxImg}
       ${enableMagnifyingGlass
           ? styles.maxWidthFull
           : styles.maxWidthWithoutMagnifier
@@ -1401,103 +1413,106 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
       if ((images && props.render) ||
         frameworkID == 'next') {
+
         return imageSlideElement(index);
       }
       else {
-        return <img
-          className={`imageModal ${props.imgElemClassname ? props.imgElemClassname : ''}
-          ${styles.lightboxImg} 
-          ${enableMagnifyingGlass
-              ? styles.maxWidthFull
-              : styles.maxWidthWithoutMagnifier
-            } ${styles.containImg} `}
-          ref={imageRef}
-          key={index}
-          loading='lazy'
-          style={getImageStyle()}
-          src={
-            images && images[index].original
-              ? images[index].original
-              : images[index].src
-          }
-          onLoad={(img: any) => {
+        return (
+          <img
+            className={`imageModal ${props.imgElemClassname ? props.imgElemClassname : ''}
+      ${styles.lightboxImg}
+      ${enableMagnifyingGlass
+                ? styles.maxWidthFull
+                : styles.maxWidthWithoutMagnifier
+              } ${styles.containImg} `}
+            ref={imageRef}
+            key={index}
+            loading='lazy'
+            style={getImageStyle()}
+            src={
+              images && images[index].original
+                ? images[index].original
+                : images[index].src
+            }
+            onLoad={(img: any) => {
 
-            if (displayImgMetadata) {
+              if (displayImgMetadata) {
 
-              if (img) {
-                let img_target: any = img.target;
-                let individual_image_metadata = {};
+                if (img) {
+                  let img_target: any = img.target;
+                  let individual_image_metadata = {};
 
-                // get filename
-                let name = getImageFilename(img_target.src)
-                individual_image_metadata["name"] = name;
+                  // get filename
+                  let name = getImageFilename(img_target.src)
+                  individual_image_metadata["name"] = name;
 
-                exifr.parse(img_target, true).then(exif => {
-                  if (exif) {
-                    let keys = ["isoData", "createDate", "height", "width", "shutterSpeed", "fNumber"];
+                  exifr.parse(img_target, true).then(exif => {
+                    if (exif) {
+                      let keys = ["isoData", "createDate", "height", "width", "shutterSpeed", "fNumber"];
 
-                    for (let i = 0; i < keys.length; i++) {
-                      let keyName = keys[i];
-                      switch (keyName) {
-                        case "isoData":
-                          if (exif.ISO) {
-                            individual_image_metadata["isoData"] = exif.ISO;
-                          }
-                          break;
-                        case "createDate":
-                          if (exif.CreateDate) {
-                            individual_image_metadata["createDate"] = parseCreateDate(exif.CreateDate);
-                          }
-                          break;
-                        case "height":
-                          if (exif.ExifImageHeight) {
-                            individual_image_metadata["height"] = exif.ExifImageHeight;
-                          }
-                          break;
-                        case "width":
-                          if (exif.ExifImageWidth) {
-                            individual_image_metadata["width"] = exif.ExifImageWidth;
-                          }
-                          break;
-                        case "fNumber":
-                          if (exif.fNumber) {
-                            individual_image_metadata["fNumber"] = exif.fNumber;
-                          }
-                          break;
-                        case "shutterSpeed":
-                          if (exif.ShutterSpeedValue) {
-                            individual_image_metadata["shutterSpeed"] = exif.ShutterSpeedValue;
-                          }
-                          break;
+                      for (let i = 0; i < keys.length; i++) {
+                        let keyName = keys[i];
+                        switch (keyName) {
+                          case "isoData":
+                            if (exif.ISO) {
+                              individual_image_metadata["isoData"] = exif.ISO;
+                            }
+                            break;
+                          case "createDate":
+                            if (exif.CreateDate) {
+                              individual_image_metadata["createDate"] = parseCreateDate(exif.CreateDate);
+                            }
+                            break;
+                          case "height":
+                            if (exif.ExifImageHeight) {
+                              individual_image_metadata["height"] = exif.ExifImageHeight;
+                            }
+                            break;
+                          case "width":
+                            if (exif.ExifImageWidth) {
+                              individual_image_metadata["width"] = exif.ExifImageWidth;
+                            }
+                            break;
+                          case "fNumber":
+                            if (exif.fNumber) {
+                              individual_image_metadata["fNumber"] = exif.fNumber;
+                            }
+                            break;
+                          case "shutterSpeed":
+                            if (exif.ShutterSpeedValue) {
+                              individual_image_metadata["shutterSpeed"] = exif.ShutterSpeedValue;
+                            }
+                            break;
+                        }
+                      }
+
+                      let imgMetadataItems = imgMetadata;
+                      imgMetadataItems[index] = individual_image_metadata;
+                      setImgMetadata(imgMetadataItems);
+
+                      if (index == slideIndex) {
+                        setIsLoading(false)
                       }
                     }
 
-                    let imgMetadataItems = imgMetadata;
-                    imgMetadataItems[index] = individual_image_metadata;
-                    setImgMetadata(imgMetadataItems);
-
-                    if (index == slideIndex) {
-                      setIsLoading(false)
-                    }
                   }
-
+                  )
                 }
-                )
               }
-            }
 
-            if (index == slideIndex) {
-              setDisplayLoader(false)
-            }
+              if (index == slideIndex) {
+                setDisplayLoader(false)
+              }
 
-            if (props.images) {
-              setItemLoaded(index)
-            } else {
-              setImagesItemLoaded(index)
-            }
-          }}
-          id='img'
-        />
+              if (props.images) {
+                setItemLoaded(index)
+              } else {
+                setImagesItemLoaded(index)
+              }
+            }}
+            id='img'
+          />
+        );
 
       }
     }
@@ -1699,6 +1714,33 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
   }
 
+  const getImageText = (): JSX.Element | null => {
+    if (props.images && props.images.length > 0) {
+      return (
+        <div key={slideIndex}>
+          <p className={styles.captionQuote}>
+            {props.images[slideIndex].captionQuote}
+          </p>
+          {/* <p className={styles.captionDescription}>
+            {images[index].captionDescription}
+          </p>
+          {images[index].imageDetails && images[index].imageDetails.map((section, idx) => (
+            <div key={idx}>
+              <h3>{section.heading}</h3>
+              <ul>
+                {section.content && section.content.map((line, lineIdx) => (
+                  <li key={lineIdx}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          ))} */}
+        </div>
+
+      );
+    }
+    return null;
+  }
+
   const regularImgPaneNodes = Array.apply(null, Array(images.length)).map(
     (_, index) => {
       return (
@@ -1716,67 +1758,71 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
             )
 
               : (
-                <div className={getEmblaClass(index)} onTouchStart={onTouchStart} onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
+                <>
+                  <div className={getEmblaClass(index)} onTouchStart={onTouchStart} onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
 
-                  <TransformWrapper
-                    ref={(el) => (zoomReferences.current[index] = el)}
-                    onWheel={(ref, wheelEvent) => {
-                      initZoom(ref)
-                    }}
-                    disabled={disableZoom}
-                    panning={{
-                      disabled: isPanningDisabled()
-                    }}
-
-                    key={index}
-                    onZoom={
-                      (ref, event) => {
+                    <TransformWrapper
+                      ref={(el) => (zoomReferences.current[index] = el)}
+                      onWheel={(ref, wheelEvent) => {
                         initZoom(ref)
-                      }
-                    }
-                    onZoomStop={(ref, event) => { initZoom(ref) }}
-                    onTransformed={
-                      (ref, event) => {
-                        initZoom(ref)
-                      }
-                    }
-                    onPinchingStop={(ref, event) => {
-                      initZoom(ref)
-                    }}
-                    centerZoomedOut={true}
-                    initialScale={1}
-                    maxScale={maxScale}
-                    alignmentAnimation={{ sizeX: 0, sizeY: 0 }}
-                  >
-                    <TransformComponent
-                      wrapperClass={styles.reactTransformWrapper}
-                      contentClass={styles.reactTransformComponent}
-                      wrapperStyle={{
-                        maxWidth: '100vw',
-                        height: '100vh',
-                        margin: 'auto'
                       }}
-                      contentStyle={
-                        {
-                            maxWidth: '100vw',
-                            height: '100vh',
-                            margin: 'auto',
-                            display: 'grid'
-                          }
-                      }
+                      disabled={disableZoom}
+                      panning={{
+                        disabled: isPanningDisabled()
+                      }}
+
                       key={index}
+                      onZoom={
+                        (ref, event) => {
+                          initZoom(ref)
+                        }
+                      }
+                      onZoomStop={(ref, event) => { initZoom(ref) }}
+                      onTransformed={
+                        (ref, event) => {
+                          initZoom(ref)
+                        }
+                      }
+                      onPinchingStop={(ref, event) => {
+                        initZoom(ref)
+                      }}
+                      centerZoomedOut={true}
+                      initialScale={1}
+                      maxScale={maxScale}
+                      alignmentAnimation={{ sizeX: 0, sizeY: 0 }}
                     >
-                      <div
-                        className={`${styles.slideshowImg} ${props.lightboxImgClass ? props.lightboxImgClass : ""}
+                      <TransformComponent
+                        wrapperClass={styles.reactTransformWrapper}
+                        contentClass={styles.reactTransformComponent}
+                        wrapperStyle={{
+                          width: '100%',
+                          height: '70vh',
+                          // margin: 'auto'
+                        }}
+                        contentStyle={
+                          {
+                            width: '100%',
+                            height: '70vh',
+                            // margin: 'auto',
+                            display: 'flex',
+                            // backgroundColor: 'orange',
+                            // flexWrap: 'nowrap',
+                          }
+                        }
+                        key={index}
+                      >
+                        <div
+                          className={`${styles.slideshowImg} ${props.lightboxImgClass ? props.lightboxImgClass : ""}
                       ${displayImgMetadata ? styles.slideshowImgMetadata : ""}
                       `}
-                      >
-                        {getLightboxElem(index)}
-                      </div>
-                    </TransformComponent>
-                  </TransformWrapper>
-                </div>
+                        >
+                          {getLightboxElem(index)}
+                        </div>
+                      </TransformComponent>
+                    </TransformWrapper>
+                  </div>
+                </>
               )}
         </div>
       )
@@ -1881,7 +1927,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
       if (reducedMotionMediaQuery?.addEventListener) {
         reducedMotionMediaQuery.addEventListener('change', setReducedMotion(reducedMotionMediaQuery));
-      } 
+      }
       else {
         reducedMotionMediaQuery.addListener(setReducedMotion(reducedMotionMediaQuery));
       }
@@ -2003,16 +2049,16 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
   const initAndOpenLightbox = (i, img_gallery, isMounted) => {
     let index;
-  
+
     if (isRTL) {
       index = getRTLIndex(img_gallery.length, i)
     } else {
       index = i
     }
-  
+
     let reactSwipeOptionConfig = reactSwipeOptions
-     reactSwipeOptionConfig.startIndex = index
-  
+    reactSwipeOptionConfig.startIndex = index
+
     if (isMounted) setReactSwipeOptions(reactSwipeOptionConfig)
     setZoomIdx(index)
     openModal(index)
@@ -2041,38 +2087,38 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
             queryElems.forEach(element => {
               img_gallery.push(element)
             });
-              
+
           }
           let img_elements: ImageElement[] = []
 
           if (img_gallery.length > 0) {
             for (let i = 0; i <= img_gallery.length - 1; i++) {
               let img = img_gallery[i]
-                img.addEventListener(
-                  'click',
-                  () => {
-                    initAndOpenLightbox(i, img_gallery, isMounted)
-                  },
-                  false
-                )
-                img.classList.add('cursor-pointer')
-                
-                if (img.src) {
-                  img_elements.push({
-                    src: img.src,
-                    alt: img.alt,
-                    loaded: false
-                  })
-                }else if (img.href) {
-                  img_elements.push({
-                    src: img.href,
-                    alt: img.alt,
-                    loaded: false
-                  })
-                }
-          
+              img.addEventListener(
+                'click',
+                () => {
+                  initAndOpenLightbox(i, img_gallery, isMounted)
+                },
+                false
+              )
+              img.classList.add('cursor-pointer')
+
+              if (img.src) {
+                img_elements.push({
+                  src: img.src,
+                  alt: img.alt,
+                  loaded: false
+                })
+              } else if (img.href) {
+                img_elements.push({
+                  src: img.href,
+                  alt: img.alt,
+                  loaded: false
+                })
+              }
+
             }
-            
+
             if (isMounted && !coverMode) {
               if (props.framework != "next") {
                 setImages(img_elements)
@@ -2082,20 +2128,20 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
               }
             }
 
+          }
         }
-      }
         else {
 
           let img_gallery: NodeListOf<HTMLImageElement> = document.querySelectorAll(
             `[data-lightboxjs=${lightboxIdentifier}]`
           )
           let originalImageAttr = false;
-  
+
           let img_elements: ImageElement[] = []
           if (img_gallery.length > 0) {
             for (let i = 0; i <= img_gallery.length - 1; i++) {
               let img = img_gallery[i]
-  
+
               let attr_val = img.getAttribute('data-lightboxjs')
               if (attr_val == lightboxIdentifier) {
                 img.addEventListener(
@@ -2106,9 +2152,9 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                   false
                 )
                 img.classList.add('cursor-pointer')
-  
+
                 let original_img_src = img.getAttribute('data-lightboxjs-original')
-  
+
                 if (original_img_src) {
                   img_elements.push({
                     src: original_img_src,
@@ -2138,7 +2184,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
             if (isMounted && !coverMode) {
               if (originalImageAttr) {
                 setImages(img_elements)
-  
+
               }
               else if (props.showAllImages != true && props.framework != "next") {
                 setImages(img_elements)
@@ -2465,37 +2511,37 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     let image_elems;
 
     if (props.images && props.children && lightboxIdentifier == false) {
-        image_elems =  props.children
+      image_elems = props.children
     }
     else if (props.images && lightboxIdentifier == false) {
-        image_elems = props.images.map((elem, index) => (
-          <img
-            className={`${props.imgClassName ? props.imgClassName : ''
-              } ${styles.cursorPointer}`}
+      image_elems = props.images.map((elem, index) => (
+        <img
+          className={`${props.imgClassName ? props.imgClassName : ''
+            } ${styles.cursorPointer}`}
 
-            src={!isVideo(index) ? elem.src : elem.thumbnail}
-            onClick={() => {
-              let img_index
+          src={!isVideo(index) ? elem.src : elem.thumbnail}
+          onClick={() => {
+            let img_index
 
-              if (isRTL) {
-                img_index = getRTLIndex(props.images.length, index)
-              } else {
-                img_index = index
-              }
+            if (isRTL) {
+              img_index = getRTLIndex(props.images.length, index)
+            } else {
+              img_index = index
+            }
 
-              openModalWithSlideNum(img_index)
-            }}
-            key={index}
-          />
-        ))
+            openModalWithSlideNum(img_index)
+          }}
+          key={index}
+        />
+      ))
     }
     else if (lightboxIdentifier != false && props.children && coverMode == false) {
-      {/* IF Lightbox identifier provided or props.images provided AND props.children */}
-        image_elems = props.children
+      {/* IF Lightbox identifier provided or props.images provided AND props.children */ }
+      image_elems = props.children
     }
     // No lightbox identifier provided or no cover mode
     else if (!((lightboxIdentifier == false && props.images) || coverMode == true)) {
-        image_elems = previewImageElems
+      image_elems = previewImageElems
         .filter((elem) => elem.type == 'img')
         .map((elem, index) => (
           <img
@@ -2518,7 +2564,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
         ))
     }
     else if (coverMode) {
-        image_elems = props.children
+      image_elems = props.children
     }
     return image_elems;
 
@@ -2528,165 +2574,147 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
     {renderPreviewImages()}
 
-      {/* <AnimateSharedLayout> */}
+    {/* <AnimateSharedLayout> */}
 
-        <AnimatePresence initial={false} mode={"wait"}>
-          {showModal !== false && (
-            <Portal>
-              <Div100vh>
-                <motion.div className={`${styles.modalContainer}`}
-                   initial={"inactive"}
-                   variants={variants}
-                   animate={showModal ? "active" : "inactive"}
-                   exit={"inactive"}
-                   transition={
-                     { duration: "0.3" }
-                   }
-                   onAnimationComplete={() => {
-                     let animEntered = !animationEntered;
-                     setAnimationEntered(animEntered);
- 
-                     if (animEntered == true) {
-                       let prevFocusedElement: any = document.activeElement;
-                       setPrevFocusedElem(prevFocusedElement)
- 
-                       document.getElementById("lightboxContainer")?.focus();
-                     }
-                     else {
-                       prevFocusedElem?.focus();
-                     }
-                     if (emblaApi) emblaApi.reInit()
-                   }}
- >
-                <motion.div
-                  className={`${styles.slideshowAnimContainer}`}
-                  key='slideshowAnimContainer'
+    <AnimatePresence initial={false} mode={"wait"}>
+      {showModal !== false && (
+        <Portal>
+          <Div100vh>
+            <motion.div className={`${styles.modalContainer}`}
+              initial={"inactive"}
+              variants={variants}
+              animate={showModal ? "active" : "inactive"}
+              exit={"inactive"}
+              transition={
+                { duration: "0.3" }
+              }
+              onAnimationComplete={() => {
+                let animEntered = !animationEntered;
+                setAnimationEntered(animEntered);
 
-                  id='slideshowAnim'
-                  style={{
-                    backgroundColor: backgroundColor,
-                    width: lightboxModalWidth,
-                  }}
-               
-                >
-                  <div className={`${styles.lightboxContainer}`} id="lightboxContainer" tabIndex={-1} role="dialog"
-                    onClick={(e) => { if (modalCloseOption == "clickOutside") { checkModalClick(e) } }}>
-                    <section
-                      className={`${styles.iconsHeader} ${iconColor ? '' : getIconStyle()
-                        } imageModal`}
-                      style={{ color: iconColor }}
-                    >
-                      <KeyHandler
-                        keyValue={'ArrowLeft'}
-                        code={'37'}
-                        onKeyHandle={() => {
-                          prevSlide()
-                        }}
-                      />
-                      <KeyHandler
-                        keyValue={'ArrowRight'}
-                        code={'39'}
-                        onKeyHandle={() => {
-                          nextSlide()
-                        }}
-                      />
-                      <KeyHandler
-                        keyValue={'Escape'}
-                        code={'27'}
-                        onKeyHandle={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          if (!isBrowserFullScreen) {
-                            closeModal()
-                          }
-                        }}
-                      />
+                if (animEntered == true) {
+                  let prevFocusedElement: any = document.activeElement;
+                  setPrevFocusedElem(prevFocusedElement)
 
-                      {/* Support for Internet Explorer and Edge key values  */}
-                      <KeyHandler
-                        keyValue={'Left'}
-                        code={'37'}
-                        onKeyHandle={() => {
-                          prevSlide()
-                        }}
-                      />
-                      <KeyHandler
-                        keyValue={'Right'}
-                        code={'39'}
-                        onKeyHandle={() => {
-                          nextSlide()
-                        }}
-                      />
-                      <KeyHandler
-                        keyValue={'Esc'}
-                        code={'27'}
-                        onKeyHandle={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          if (!isBrowserFullScreen) {
-                            closeModal()
-                          }
-                        }}
-                      />
+                  document.getElementById("lightboxContainer")?.focus();
+                }
+                else {
+                  prevFocusedElem?.focus();
+                }
+                if (emblaApi) emblaApi.reInit()
+              }}
+            >
+              <motion.div
+                className={`${styles.slideshowAnimContainer}`}
+                key='slideshowAnimContainer'
 
-                      {showControls == true && (
-                        <div className={`${styles.controls}`}>
-                          {disableZoom ||
-                            displayMagnificationIcons == false ? null :
-                            <motion.div>
-                              <button onClick={() => {
-                                if (enableMagnifyingGlass) {
-                                  initMagnifyingGlass()
-                                }
-                                if (zoomReferences.current[zoomIdx] != null) {
-                                  zoomReferences.current[zoomIdx]!.zoomIn()
-                                }
-                                setZoomedIn(true)
-                              }}>
-                                <ZoomIn
-                                  size={24}
-                                  color={iconColor ? iconColor : undefined}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                    }`}
-                                  style={iconColor ? { color: iconColor } : {}}
-                                />
-                              </button>
+                id='slideshowAnim'
+                style={{
+                  backgroundColor: backgroundColor,
+                  width: lightboxModalWidth,
+                }}
 
-                            </motion.div>
-                          }
+              >
+                <div className={`${styles.lightboxContainer}`} id="lightboxContainer" tabIndex={-1} role="dialog"
+                  onClick={(e) => { if (modalCloseOption == "clickOutside") { checkModalClick(e) } }}>
+                  <section
+                    className={`${styles.iconsHeader} ${iconColor ? '' : getIconStyle()
+                      } imageModal`}
+                    style={{ color: iconColor }}
+                  >
+                    <KeyHandler
+                      keyValue={'ArrowLeft'}
+                      code={'37'}
+                      onKeyHandle={() => {
+                        prevSlide()
+                      }}
+                    />
+                    <KeyHandler
+                      keyValue={'ArrowRight'}
+                      code={'39'}
+                      onKeyHandle={() => {
+                        nextSlide()
+                      }}
+                    />
+                    <KeyHandler
+                      keyValue={'Escape'}
+                      code={'27'}
+                      onKeyHandle={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        if (!isBrowserFullScreen) {
+                          closeModal()
+                        }
+                      }}
+                    />
 
-                          {disableZoom ||
-                            displayMagnificationIcons == false ? null :
-                            <motion.div>
-                              <button
-                                onClick={() => {
-                                  zoomReferences.current[zoomIdx]!.zoomOut();
-                                  let scale = zoomReferences.current[zoomIdx]!.state.scale;
+                    {/* Support for Internet Explorer and Edge key values  */}
+                    <KeyHandler
+                      keyValue={'Left'}
+                      code={'37'}
+                      onKeyHandle={() => {
+                        prevSlide()
+                      }}
+                    />
+                    <KeyHandler
+                      keyValue={'Right'}
+                      code={'39'}
+                      onKeyHandle={() => {
+                        nextSlide()
+                      }}
+                    />
+                    <KeyHandler
+                      keyValue={'Esc'}
+                      code={'27'}
+                      onKeyHandle={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        if (!isBrowserFullScreen) {
+                          closeModal()
+                        }
+                      }}
+                    />
 
-                                  if (scale == 1 || scale == 1.65) {
-                                    setZoomedIn(false)
-                                  }
+                    {showControls == true && (
+                      <div className={`${styles.controls}`}>
+                        {disableZoom ||
+                          displayMagnificationIcons == false ? null :
+                          <motion.div>
+                            <button onClick={() => {
+                              if (enableMagnifyingGlass) {
+                                initMagnifyingGlass()
+                              }
+                              if (zoomReferences.current[zoomIdx] != null) {
+                                zoomReferences.current[zoomIdx]!.zoomIn()
+                              }
+                              setZoomedIn(true)
+                            }}>
+                              <ZoomIn
+                                size={24}
+                                color={iconColor ? iconColor : undefined}
+                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                  }`}
+                                style={iconColor ? { color: iconColor } : {}}
+                              />
+                            </button>
 
-                                }}>
-                                <ZoomOut
-                                  size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                    }`}
-                                  style={iconColor ? { color: iconColor } : {}}
-                                  color={iconColor ? iconColor : undefined}
+                          </motion.div>
+                        }
 
-                                />
-                              </button>
-
-                            </motion.div>
-                          }
-
-                          {displayDownloadBtn() ? (
+                        {disableZoom ||
+                          displayMagnificationIcons == false ? null :
+                          <motion.div>
                             <button
                               onClick={() => {
-                                saveImage()
+                                zoomReferences.current[zoomIdx]!.zoomOut();
+                                let scale = zoomReferences.current[zoomIdx]!.state.scale;
+
+                                if (scale == 1 || scale == 1.65) {
+                                  setZoomedIn(false)
+                                }
+
                               }}>
-                              <Download
+                              <ZoomOut
                                 size={24}
                                 className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
                                   }`}
@@ -2696,73 +2724,54 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                               />
                             </button>
 
-                          ) : null}
+                          </motion.div>
+                        }
 
-                          {displayFullScreenIcon ? (
-                            isBrowserFullScreen ? (
-                              <motion.div>
-                                <button
-                                  onClick={() => {
-                                    isBrowserFullScreen
-                                      ? exitFullScreen()
-                                      : fullScreen()
-                                  }}>
-                                  <FullscreenExit
-                                    size={24}
-                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                      }`}
-                                    style={iconColor ? { color: iconColor } : {}}
-                                    color={iconColor ? iconColor : undefined}
+                        {displayDownloadBtn() ? (
+                          <button
+                            onClick={() => {
+                              saveImage()
+                            }}>
+                            <Download
+                              size={24}
+                              className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                }`}
+                              style={iconColor ? { color: iconColor } : {}}
+                              color={iconColor ? iconColor : undefined}
 
-                                  />
-                                </button>
+                            />
+                          </button>
 
-                              </motion.div>
-                            ) : (
-                              <motion.div>
-                                <button onClick={() => {
+                        ) : null}
+
+                        {displayFullScreenIcon ? (
+                          isBrowserFullScreen ? (
+                            <motion.div>
+                              <button
+                                onClick={() => {
                                   isBrowserFullScreen
                                     ? exitFullScreen()
                                     : fullScreen()
                                 }}>
-                                  <Fullscreen
-                                    size={24}
-                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                      }`}
-                                    style={iconColor ? { color: iconColor } : {}}
-                                    color={iconColor ? iconColor : undefined}
+                                <FullscreenExit
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                    }`}
+                                  style={iconColor ? { color: iconColor } : {}}
+                                  color={iconColor ? iconColor : undefined}
 
-                                  />
-                                </button>
+                                />
+                              </button>
 
-                              </motion.div>
-                            )
-                          ) : null}
-
-                          {isMobile && displayImgMetadata ?
+                            </motion.div>
+                          ) : (
                             <motion.div>
                               <button onClick={() => {
-                                setShowImgMetadataPanel(!showImgMetadataPanel)
-                                setDisplayLoader(false)
+                                isBrowserFullScreen
+                                  ? exitFullScreen()
+                                  : fullScreen()
                               }}>
-                                <InfoCircle
-                                  size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                    }`}
-                                  style={iconColor ? { color: iconColor } : {}}
-                                  color={iconColor ? iconColor : undefined}
-                                />
-                              </button>
-
-                            </motion.div> : null}
-
-                          {displayThumbnailIcon ? (
-                            <motion.div>
-                              <button
-                                onClick={() => {
-                                  setShowThumbnails(!showThumbnails)
-                                }}>
-                                <GridFill
+                                <Fullscreen
                                   size={24}
                                   className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
                                     }`}
@@ -2773,299 +2782,343 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                               </button>
 
                             </motion.div>
-                          ) : null}
+                          )
+                        ) : null}
 
-                          {shouldDisplayMagnifyingGlassIcon() ? (
-                            <motion.div>
-                              <button
-                                onClick={() => initMagnifyingGlass()}
-                              >
-                                <Search
+                        {isMobile && displayImgMetadata ?
+                          <motion.div>
+                            <button onClick={() => {
+                              setShowImgMetadataPanel(!showImgMetadataPanel)
+                              setDisplayLoader(false)
+                            }}>
+                              <InfoCircle
+                                size={24}
+                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                  }`}
+                                style={iconColor ? { color: iconColor } : {}}
+                                color={iconColor ? iconColor : undefined}
+                              />
+                            </button>
+
+                          </motion.div> : null}
+
+                        {displayThumbnailIcon ? (
+                          <motion.div>
+                            <button
+                              onClick={() => {
+                                setShowThumbnails(!showThumbnails)
+                              }}>
+                              <GridFill
+                                size={24}
+                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                  }`}
+                                style={iconColor ? { color: iconColor } : {}}
+                                color={iconColor ? iconColor : undefined}
+
+                              />
+                            </button>
+
+                          </motion.div>
+                        ) : null}
+
+                        {shouldDisplayMagnifyingGlassIcon() ? (
+                          <motion.div>
+                            <button
+                              onClick={() => initMagnifyingGlass()}
+                            >
+                              <Search
+                                size={24}
+                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                  }`}
+                                style={iconColor ? { color: iconColor } : {}}
+                                color={iconColor ? iconColor : undefined}
+                              />
+                            </button>
+
+                          </motion.div>
+                        ) : null}
+
+                        {shouldDisplaySlideshowIcon() ? (
+                          <motion.div className={styles.slideshowPlayBtn}>
+                            {isSlideshowPlaying ? (
+                              <button onClick={() => {
+                                isSlideshowPlaying
+                                  ? stopSlideshow()
+                                  : playSlideshow()
+                              }}>
+                                <PauseCircleFill
                                   size={24}
                                   className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
                                     }`}
                                   style={iconColor ? { color: iconColor } : {}}
                                   color={iconColor ? iconColor : undefined}
+
                                 />
                               </button>
 
-                            </motion.div>
-                          ) : null}
+                            ) : (
+                              <button onClick={() => {
+                                isSlideshowPlaying
+                                  ? stopSlideshow()
+                                  : playSlideshow()
+                              }}>
+                                <PlayCircleFill
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                    }`}
+                                  style={iconColor ? { color: iconColor } : {}}
+                                  color={iconColor ? iconColor : undefined}
 
-                          {shouldDisplaySlideshowIcon() ? (
-                            <motion.div className={styles.slideshowPlayBtn}>
-                              {isSlideshowPlaying ? (
-                                <button onClick={() => {
-                                  isSlideshowPlaying
-                                    ? stopSlideshow()
-                                    : playSlideshow()
-                                }}>
-                                  <PauseCircleFill
-                                    size={24}
-                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                      }`}
-                                    style={iconColor ? { color: iconColor } : {}}
-                                    color={iconColor ? iconColor : undefined}
+                                />
+                              </button>
 
-                                  />
-                                </button>
+                            )}
+                          </motion.div>
+                        ) : null}
 
-                              ) : (
-                                <button onClick={() => {
-                                  isSlideshowPlaying
-                                    ? stopSlideshow()
-                                    : playSlideshow()
-                                }}>
-                                  <PlayCircleFill
-                                    size={24}
-                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                      }`}
-                                    style={iconColor ? { color: iconColor } : {}}
-                                    color={iconColor ? iconColor : undefined}
-
-                                  />
-                                </button>
-
-                              )}
-                            </motion.div>
-                          ) : null}
-
-                          {customControlComponent ? <motion.div>{customControlComponent}</motion.div> : null}
-                        </div>
-                      )}
-                      <motion.div className={`${styles.closeIcon} ${props.showControls == false ? styles.mlAuto : ""}`}>
-                        <button id="closeBtn" className={`${props.showControlsBar == false && props.showControls == false 
+                        {customControlComponent ? <motion.div>{customControlComponent}</motion.div> : null}
+                      </div>
+                    )}
+                    <motion.div className={`${styles.closeIcon} ${props.showControls == false ? styles.mlAuto : ""}`}>
+                      <button id="closeBtn" className={`${props.showControlsBar == false && props.showControls == false
                         ? styles.closeButtonRounded : styles.closeButton}`}
 
-                          onClick={() => {
-                            closeModal()
-                          }}>
-                          <XLg
-                            id="closeIcon"
-                            size={24}
-                            className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                              }`}
-                            color={iconColor ? iconColor : undefined}
-                            style={getCloseIconBtnStyle()}
-                          />
-                        </button>
+                        onClick={() => {
+                          closeModal()
+                        }}>
+                        <XLg
+                          id="closeIcon"
+                          size={24}
+                          className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                            }`}
+                          color={iconColor ? iconColor : undefined}
+                          style={getCloseIconBtnStyle()}
+                        />
+                      </button>
 
-                      </motion.div>
-                    </section>
-                    {displayArrows() ?
+                    </motion.div>
+                  </section>
+                  {displayArrows() ?
 
-                      <div>
-                        <div
-                          className={
-                            rightArrowStyle
-                              ? `${styles.next1} ${getArrowStyle()} imageModal`
-                              : "imageModal"
-                          }
-                          style={rightArrowStyle}
-                          onClick={() => {
-                            nextSlide()
-                          }}
-                        >
-                          {nextArrowElem ? nextArrowElem :
-                            <span className={`${props.rightArrowClassname ? props.rightArrowClassname : ""}`}>&#10095;</span>
-                          }
-                        </div>
-                        <div
-                          className={
-                            leftArrowStyle
-                              ? `${styles.prev1} ${getArrowStyle()} imageModal ${displayImgMetadata ? styles.prev1Metadata : ""}`
-                              : "imageModal"
-                          }
-                          style={leftArrowStyle}
-                          onClick={() => {
-                            prevSlide()
-                          }}
-                        >
-                          {prevArrowElem ? prevArrowElem :
-                            <span className={`${props.leftArrowClassname ? props.leftArrowClassname : ""}`}>&#10094;</span>
-                          }
-                        </div>
-                      </div>
-                      : null
-                    }
-
-                    <AnimatePresence initial={false} custom={direction}>
-
+                    <div>
                       <div
-                        className={`${styles.slideshowInnerContainerThumbnails
-                          } ${styles.embla} ${isImageCaption() && showControlsBar == true ? styles.slideImageAndCaption : ''
-                          } 
+                        className={
+                          rightArrowStyle
+                            ? `${styles.next1} ${getArrowStyle()} imageModal`
+                            : "imageModal"
+                        }
+                        style={rightArrowStyle}
+                        onClick={() => {
+                          nextSlide()
+                        }}
+                      >
+                        {nextArrowElem ? nextArrowElem :
+                          <span className={`${props.rightArrowClassname ? props.rightArrowClassname : ""}`}>&#10095;</span>
+                        }
+                      </div>
+                      <div
+                        className={
+                          leftArrowStyle
+                            ? `${styles.prev1} ${getArrowStyle()} imageModal ${displayImgMetadata ? styles.prev1Metadata : ""}`
+                            : "imageModal"
+                        }
+                        style={leftArrowStyle}
+                        onClick={() => {
+                          prevSlide()
+                        }}
+                      >
+                        {prevArrowElem ? prevArrowElem :
+                          <span className={`${props.leftArrowClassname ? props.leftArrowClassname : ""}`}>&#10094;</span>
+                        }
+                      </div>
+                    </div>
+                    : null
+                  }
+
+                  <AnimatePresence initial={false} custom={direction}>
+
+                    <div
+                      className={`${styles.slideshowInnerContainerThumbnails
+                        } ${styles.embla} ${isImageCaption() && showControlsBar == true ? styles.slideImageAndCaption : ''
+                        } 
                           ${styles.slideshowInnerContainer}
                           ${props.showControlsBar == false || props.fullScreen
-                            ? styles.hideControlsBar
-                            : ""
-                          }
+                          ? styles.hideControlsBar
+                          : ""
+                        }
                           ${displayImgMetadata ? styles.slideshowInnerContainerImgMetadata : ""}  `}>
 
-                        {shouldDisplayMetadataPanel() ?
-                          <div className={styles.metadata}
-                            style={getMetadataPanelStyle()}>
-                            {isLoading ? null :
-                              <div className={styles.metadataInnerContainer}>
+                      {shouldDisplayMetadataPanel() ?
+                        <div className={styles.metadata}
+                          style={getMetadataPanelStyle()}>
+                          {isLoading ? null :
+                            <div className={styles.metadataInnerContainer}>
 
-                                {getMetadataPanel()}
+                              {getMetadataPanel()}
 
-                                {isMobile && showImgMetadataPanel ?
-                                  <button className={styles.imgMetadataCloseBtn}
-                                    onClick={() => {
-                                      setShowImgMetadataPanel(false)
-                                    }}>
-                                    <XLg
-                                      size={24}
-                                      className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                        }`}
-                                      color={iconColor ? iconColor : undefined}
-                                      style={iconColor ? { color: iconColor } : {}}
-                                    />
-                                  </button> : null
-                                }
-                              </div>
-                            }
+                              {isMobile && showImgMetadataPanel ?
+                                <button className={styles.imgMetadataCloseBtn}
+                                  onClick={() => {
+                                    setShowImgMetadataPanel(false)
+                                  }}>
+                                  <XLg
+                                    size={24}
+                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                      }`}
+                                    color={iconColor ? iconColor : undefined}
+                                    style={iconColor ? { color: iconColor } : {}}
+                                  />
+                                </button> : null
+                              }
+                            </div>
+                          }
 
 
-                          </div>
-                          : null}
-                        <div className={`${styles.emblaViewport} 
+                        </div>
+                        : null}
+                      <div className={`${styles.emblaViewport}
                             ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}
-                          ref={showModal ? emblaRef : null}>
-                          <div className={`
-                          ${imgAnimation == "fade" ? styles.imgfade : ""} 
+                        ref={showModal ? emblaRef : null}>
+                        <div className={`
+                          ${imgAnimation == "fade" ? styles.imgfade : ""}
                           ${styles.emblaContainer}
                             ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}>
 
-                            {regularImgPaneNodes}
+                          {regularImgPaneNodes}
 
-                          </div>
                         </div>
                       </div>
 
-                      {displayLoader == true && !isHTMLVideo(slideIndex) ? (
-                        <span
-                          key='loader'
-                          className={`${styles.loader
-                            } ${getLoaderThemeClass()}`}
-                        ></span>
-                      ) : null}
-                    </AnimatePresence>
-
-                    <div
-                      className={`${styles.thumbnailsOuterContainer} ${isImageCaption() ? styles.thumbnailsAndCaption : ''}
-                      ${displayImgMetadata ? styles.thumbnailsOuterContainerMetadata : ""} `}
-                      style={
-                        getThumbnailsOuterContainerStyle()
-                      }
-                    >
-                      {isImageCaption() ? (
-                        <div className={`${styles.imgTitleContainer} imageModal`}>
-                          <p
-                            className={`${styles.imgTitle}`}
-                            key={'imgCaption' + slideIndex}
-                            style={
-                              props.captionStyle
-                                ? props.captionStyle
-                                : { color: textColor }
-                            }
-                          >
-                            {getImageCaption()}
-                          </p>
+                      <div className={styles.textContainer}>
+                        <div key={'imgCaptionNew' + slideIndex}>
+                          {getImageText()}
                         </div>
-                      ) : null}
+                      </div>
 
-                      <AnimatePresence initial={animatedThumbnails}>
-                        {showThumbnails !== false && navigationDots !== true && (
-                          <motion.div
-                            initial={'hidden'}
-                            exit={'hidden'}
-                            animate={'visible'}
-                            style={
-                              imagesLoaded ? {} : { display: 'displayHidden' }
-                            }
-                            transition={{
-                              type: 'spring',
-                              duration: 0.75
-                            }}
-                            variants={thumbnailVariants}
-                            className={`${styles.thumbnails} ${isImageCaption()
-                              ? styles.thumbnailsWithCaption
-                              : ''
-                              }`}
-                          >
-                            <div className={`${styles.emblaThumbs} ${styles.thumbnails}`}>
-                              <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
-                                <div className={styles.emblaThumbsContainer}>
-                                  {frameworkID == 'next' &&
-                                    props.images
-                                    ? props.images.map((img, index) => (
-                                      getImageThumbnail(img, index, true, props)
-                                    ))
-                                    : // Not Next.js
-                                    images.map((img, index) => (
-                                      getImageThumbnail(img, index, false, props)
-                                    ))}
-
-                                </div>
-                              </div>
-                            </div>
-
-                          </motion.div>
-                        )}
-
-                        {showThumbnails !== true && navigationDots !== false && (
-                          <motion.div
-                            initial={'hidden'}
-                            exit={'hidden'}
-                            animate={'visible'}
-                            style={
-                              imagesLoaded ? {} : { display: 'displayHidden' }
-                            }
-                            transition={{
-                              type: 'spring',
-                              duration: 0.75
-                            }}
-                            variants={thumbnailVariants}
-                            className={`${styles.thumbnails} ${isImageCaption()
-                              ? styles.thumbnailsWithCaption
-                              : ''
-                              }`}
-                          >
-                            <div className={`${styles.emblathumbs} ${styles.thumbnails}`}>
-                              <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
-                                <div className={`${styles.navigationDots} ${styles.emblaThumbsContainer} imageModal
-                                `}>
-                                  {frameworkID == 'next' &&
-                                    props.images
-                                    ? props.images.map((img, index) => (
-                                      getNavigationDot(index)
-                                    ))
-                                    : // Not Next.js
-                                    images.map((img, index) => (
-                                      getNavigationDot(index)
-                                    ))}
-
-                                </div>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </div>
+
+                    {displayLoader == true && !isHTMLVideo(slideIndex) ? (
+                      <span
+                        key='loader'
+                        className={`${styles.loader
+                          } ${getLoaderThemeClass()}`}
+                      ></span>
+                    ) : null}
+                  </AnimatePresence>
+
+                  <div
+                    className={`${styles.thumbnailsOuterContainer} ${isImageCaption() ? styles.thumbnailsAndCaption : ''}
+                      ${displayImgMetadata ? styles.thumbnailsOuterContainerMetadata : ""} `}
+                    style={
+                      getThumbnailsOuterContainerStyle()
+                    }
+                  >
+                    {isImageCaption() ? (
+                      <div className={`${styles.imgTitleContainer} imageModal`}>
+                        <p
+                          className={`${styles.imgTitle}`}
+                          key={'imgCaption' + slideIndex}
+                          style={
+                            props.captionStyle
+                              ? props.captionStyle
+                              : { color: textColor }
+                          }
+                        >
+                          {getImageCaption()}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    <AnimatePresence initial={animatedThumbnails}>
+                      {showThumbnails !== false && navigationDots !== true && (
+                        <motion.div
+                          initial={'hidden'}
+                          exit={'hidden'}
+                          animate={'visible'}
+                          style={
+                            imagesLoaded ? {} : { display: 'displayHidden' }
+                          }
+                          transition={{
+                            type: 'spring',
+                            duration: 0.75
+                          }}
+                          variants={thumbnailVariants}
+                          className={`${styles.thumbnails} ${isImageCaption()
+                            ? styles.thumbnailsWithCaption
+                            : ''
+                            }`}
+                        >
+                          <div className={`${styles.emblaThumbs} ${styles.thumbnails}`}>
+                            <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
+                              <div className={styles.emblaThumbsContainer}>
+                                {frameworkID == 'next' &&
+                                  props.images
+                                  ? props.images.map((img, index) => (
+                                    getImageThumbnail(img, index, true, props)
+                                  ))
+                                  : // Not Next.js
+                                  images.map((img, index) => (
+                                    getImageThumbnail(img, index, false, props)
+                                  ))}
+
+                              </div>
+                            </div>
+                          </div>
+
+                        </motion.div>
+                      )}
+
+                      {showThumbnails !== true && navigationDots !== false && (
+                        <motion.div
+                          initial={'hidden'}
+                          exit={'hidden'}
+                          animate={'visible'}
+                          style={
+                            imagesLoaded ? {} : { display: 'displayHidden' }
+                          }
+                          transition={{
+                            type: 'spring',
+                            duration: 0.75
+                          }}
+                          variants={thumbnailVariants}
+                          className={`${styles.thumbnails} ${isImageCaption()
+                            ? styles.thumbnailsWithCaption
+                            : ''
+                            }`}
+                        >
+                          <div className={`${styles.emblathumbs} ${styles.thumbnails}`}>
+                            <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
+                              <div className={`${styles.navigationDots} ${styles.emblaThumbsContainer} imageModal
+                                `}>
+                                {frameworkID == 'next' &&
+                                  props.images
+                                  ? props.images.map((img, index) => (
+                                    getNavigationDot(index)
+                                  ))
+                                  : // Not Next.js
+                                  images.map((img, index) => (
+                                    getNavigationDot(index)
+                                  ))}
+
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                </motion.div>
-                {rightSidebarComponent}
+                </div>
+              </motion.div>
+              {rightSidebarComponent}
 
-                </motion.div>
-             
+            </motion.div>
 
-              </Div100vh>
-            </Portal>
-          )}
-        </AnimatePresence>
-      {/* </AnimateSharedLayout> */}
-    </div>
+
+          </Div100vh>
+        </Portal>
+      )}
+    </AnimatePresence>
+    {/* </AnimateSharedLayout> */}
+  </div>
 }
 )

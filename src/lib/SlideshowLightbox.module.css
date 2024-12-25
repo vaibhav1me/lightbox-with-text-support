@@ -273,7 +273,7 @@ img.hoverShadow {
 .slideshowInnerContainer {
   position: fixed;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: row; */
   justify-content: center;
   transition: top 0.2s ease-in-out 0s;
   top: 10%;
@@ -282,6 +282,8 @@ img.hoverShadow {
   margin-right: auto;
   text-align: center;
   z-index: 1000000;
+  flex-wrap: nowrap;
+  background-color: orange;
   /* background-color: aqua;  no point */
 }
 
@@ -534,13 +536,9 @@ img.hoverShadow {
     scrollbar-gutter: stable both-edges;
   }
 
-  .slideshowInnerContainer img {
-    margin-top: 0vh;
-    /* width: 70vw; */
-  }
-
   .fullScreenContainer img {
     width: 100vw;
+    /* border: solid yellow 10px; */
   }
 
   .slideshowInnerContainerFullScreen {
@@ -601,7 +599,18 @@ img.hoverShadow {
   .slideshowInnerContainer {
     width: 100vw;
     height: 95vh;
-    /* background-color: cadetblue; */
+  }
+  /* controls image inside slideshow */
+  .slideshowInnerContainer img {
+    margin-top: 0vh;
+    /* width: 50%; */
+  }
+  .textContainer {
+    width: 40%;
+    background-color: blue;
+    height: 70vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
   }
 
   .hideControlsBar {
@@ -641,12 +650,16 @@ img.hoverShadow {
 }
 
 @media screen and (min-width: 53em) {
+  /* IMAGE CLASS */
   .slideshowImg {
-    display: grid;
-    width: 100vw;
+    display: flex;
+    /* width: 50%; */
+    justify-content: center;
+    align-items: center;
     height: 70vh;
-    place-items: start;
     /* margin-top: 7vh; */
+    background-color: aliceblue;
+    flex: 1 1 60%;
   }
 
   .hideControlsBar .slideshowImg,
@@ -830,6 +843,7 @@ img.hoverShadow {
 
 @media screen and (max-width: 53em) {
   /* Small screens thing to FW */
+  /* IMAGE CLASS */
   .slideshowImg {
     display: flex;
     justify-content: center;
@@ -1216,7 +1230,7 @@ img.hoverShadow {
 
 .emblaViewport {
   overflow: hidden;
-  width: 100vw;
+  width: 50%;
 }
 
 .emblaContainer {
