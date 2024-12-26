@@ -6,36 +6,39 @@ import img from "/nick-design-8RrPve9MCDc-unsplash.jpg";
 import img2 from "/pexels-photo-2071882.jpeg";
 
 function App() {
+
   const data = [
     {
       src: img,
-      captionTitle: "1",
-      captionQuote: "1...",
-      captionDescription: "1....",
+      captionTitle: "C / 2022 E3(ZTF) – Untracked",
+      captionQuote: "Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail",
+      captionDescription: "Presenting you a cosmic gift, glowing in all its green and glory, C / 2022 E3(ZTF), once in 50,000 years wonder, yet another tale that's temporary.",
       imageDetails: [
         {
           heading: "Equipment used:",
           content: [
-            "Camera model: Nikon D5600 with T-ring",
-            "Imaging scope: MEADE LX90",
+            "Camera model: Nikon D5600",
+            "Imaging scope: Celestron Omni XLT 120, 1000mm focal length, 120mm aperture",
+            "Mount: Celestron Omni CG4"
           ],
         },
         {
           heading: "Acquisition:",
           content: [
-            "Total exposure time: 103x15s",
-            "Aperture: 4 inches",
-            "ISO: 8000",
-            "103 Lights",
-            "20 Darks",
-            "No flats, dark-flats, bias used",
+            "Exposure: 0.77 seconds",
+            "ISO: 25600",
+            "Lights: 530",
+            "Darks: 8",
+            "No flats, dark - flats, bias frames were used."
           ],
         },
         {
           heading: "Processing:",
           content: [
-            "All images are stacked in Siril",
-            "Post processed in Adobe Photoshop",
+            "All images stacked in Siril",
+            "Stars and Comet stacked separately",
+            "No colour calibration.",
+            "Stars and Comet combined in photoshop"
           ],
         },
       ],

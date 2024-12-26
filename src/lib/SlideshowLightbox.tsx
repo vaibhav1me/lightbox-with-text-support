@@ -100,6 +100,7 @@ interface SlideItem {
   type?: string,
   alt?: string,
   loaded?: boolean,
+  caption?: string,
   thumbnailSrc?: string,
   captionTitle?: string,
   captionQuote?: string,
@@ -1710,36 +1711,38 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
         setZoomedIn(true)
       }
     }
-
-
   }
 
   const getImageText = (): JSX.Element | null => {
     if (props.images && props.images.length > 0) {
       return (
-        <div key={slideIndex}>
+        <div key={slideIndex} className={styles.textContainerInner}>
+          <p className={styles.captionTitle}>
+            {props.images[slideIndex].captionTitle}
+          </p>
           <p className={styles.captionQuote}>
             {props.images[slideIndex].captionQuote}
           </p>
-          {/* <p className={styles.captionDescription}>
-            {images[index].captionDescription}
+          <p className={styles.captionDescription}>
+            {images[slideIndex].captionDescription}
           </p>
-          {images[index].imageDetails && images[index].imageDetails.map((section, idx) => (
+          {images[slideIndex].imageDetails && images[slideIndex].imageDetails.map((section, idx) => (
             <div key={idx}>
-              <h3>{section.heading}</h3>
-              <ul>
+              <h3 className={styles.sectionHeading}>{section.heading}</h3>
+              <ul className={styles.sectionContentUl}>
                 {section.content && section.content.map((line, lineIdx) => (
-                  <li key={lineIdx}>{line}</li>
+                  <li key={lineIdx} className={styles.sectionContentLi}>{line}</li>
                 ))}
               </ul>
             </div>
-          ))} */}
+          ))}
         </div>
 
       );
     }
     return null;
   }
+
 
   const regularImgPaneNodes = Array.apply(null, Array(images.length)).map(
     (_, index) => {
@@ -2990,9 +2993,9 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                       </div>
 
                       <div className={styles.textContainer}>
-                        <div key={'imgCaptionNew' + slideIndex}>
-                          {getImageText()}
-                        </div>
+                        {/* <div key={'imgCaptionNew' + slideIndex}> */}
+                        {getImageText()}
+                        {/* </div> */}
                       </div>
 
                     </div>

@@ -283,7 +283,7 @@ img.hoverShadow {
   text-align: center;
   z-index: 1000000;
   flex-wrap: nowrap;
-  background-color: orange;
+  /* background-color: orange; */
   /* background-color: aqua;  no point */
 }
 
@@ -607,13 +607,60 @@ img.hoverShadow {
   }
   .textContainer {
     width: 40%;
-    background-color: blue;
+    /* background-color: blue; */
     height: 70vh;
     overflow-y: scroll;
     scrollbar-width: none;
+    padding: 1em;
+    color: #fcfeff;
+    /* position: relative; */
+    /* z-index: 99999999; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
   }
-
-  .hideControlsBar {
+  .textContainerInner {
+    /* background-color: aquamarine; */
+    /* display: flex;
+    flex-direction: column; */
+    /* justify-content: center; */
+    /* align-items: center; */
+  }
+  /* EDIT SIZES AS REQUIRED @VAIBHAV */
+  .captionTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: left;
+  }
+  .captionQuote {
+    font-style: italic;
+    max-width: 80%;
+    text-align: left;
+    color: gray;
+    /* edit size? */
+  }
+  .captionDescription {
+    font-size: 1em;
+    margin-top: 1em;
+    max-width: 80%;
+    text-align: left;
+    /* edit size? */
+  }
+  .sectionHeading {
+    text-align: left;
+    padding-bottom: 0;
+    margin-bottom: 0.25em;
+  }
+  .sectionContentUl {
+    list-style-type: none;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    max-width: 80%;
+  }
+  .caption .hideControlsBar {
     height: 100vh;
   }
 
@@ -658,7 +705,7 @@ img.hoverShadow {
     align-items: center;
     height: 70vh;
     /* margin-top: 7vh; */
-    background-color: aliceblue;
+    /* background-color: aliceblue; */
     flex: 1 1 60%;
   }
 
