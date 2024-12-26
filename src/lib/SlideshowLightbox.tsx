@@ -546,6 +546,14 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     }
     return false
   }
+  const isTextBox = () => {
+    if (props.images && props.images.length > 0) {
+      if (props.images[slideIndex]?.captionTitle) {
+        return true
+      }
+    }
+    return false
+  }
 
   const displayDownloadBtn = () => {
     if (isVideo(slideIndex)) {
@@ -2992,11 +3000,11 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                         </div>
                       </div>
 
-                      <div className={styles.textContainer}>
+                      {isTextBox() ? (<div className={styles.textContainer}>
                         {/* <div key={'imgCaptionNew' + slideIndex}> */}
                         {getImageText()}
                         {/* </div> */}
-                      </div>
+                      </div>) : null}
 
                     </div>
 

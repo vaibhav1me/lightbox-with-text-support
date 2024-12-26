@@ -4,7 +4,7 @@ import './App.css'
 import { useState } from "react";
 import img from "/nick-design-8RrPve9MCDc-unsplash.jpg";
 import img2 from "/pexels-photo-2071882.jpeg";
-
+import moon from "/moon-1-min.jpg";
 function App() {
 
   const data = [
@@ -78,36 +78,9 @@ function App() {
     },
     {
       src: img2,
-      captionTitle: "3",
-      captionQuote: "3...",
-      captionDescription: "3....",
-      imageDetails: [
-        {
-          heading: "Equipment used:",
-          content: [
-            "Camera model: Nikon D5600 with T-ring",
-            "Imaging scope: MEADE LX90",
-          ],
-        },
-        {
-          heading: "Acquisition:",
-          content: [
-            "Total exposure time: 103x15s",
-            "Aperture: 4 inches",
-            "ISO: 8000",
-            "103 Lights",
-            "20 Darks",
-            "No flats, dark-flats, bias used",
-          ],
-        },
-        {
-          heading: "Processing:",
-          content: [
-            "All images are stacked in Siril",
-            "Post processed in Adobe Photoshop",
-          ],
-        },
-      ],
+    },
+    {
+      src: moon,
     }
   ];
   const [isOpen, setIsOpen] = useState(false);

@@ -535,6 +535,10 @@ img.hoverShadow {
     margin-right: auto;
     scrollbar-gutter: stable both-edges;
   }
+  /* we only want 50% in desktop screens */
+  .emblaViewport {
+    width: 50%;
+  }
 
   .fullScreenContainer img {
     width: 100vw;
@@ -600,7 +604,6 @@ img.hoverShadow {
     width: 100vw;
     height: 95vh;
   }
-  /* controls image inside slideshow */
   .slideshowInnerContainer img {
     margin-top: 0vh;
     /* width: 50%; */
@@ -1277,7 +1280,6 @@ img.hoverShadow {
 
 .emblaViewport {
   overflow: hidden;
-  width: 50%;
 }
 
 .emblaContainer {
