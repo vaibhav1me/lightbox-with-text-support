@@ -270,10 +270,11 @@ img.hoverShadow {
   margin-right: auto;
 }
 
+/* @vaibhav here */
 .slideshowInnerContainer {
   position: fixed;
   display: flex;
-  /* flex-direction: row; */
+  /* flex-direction: column; */
   justify-content: center;
   transition: top 0.2s ease-in-out 0s;
   top: 10%;
@@ -520,7 +521,7 @@ img.hoverShadow {
   }
 }
 
-/* Desktop screens */
+/* Desktop screens  @vaibhav here */
 @media screen and (min-width: 42em) {
   .imageSlide {
     height: 70vh;
@@ -535,15 +536,15 @@ img.hoverShadow {
     margin-right: auto;
     scrollbar-gutter: stable both-edges;
   }
-  /* we only want 50% in desktop screens */
+  /*@jeevs  we only want 50% in desktop screens */
   .emblaViewport {
     width: 50%;
   }
 
   .fullScreenContainer img {
     width: 100vw;
-    /* border: solid yellow 10px; */
   }
+  /* end of edits*/
 
   .slideshowInnerContainerFullScreen {
     top: 0%;
@@ -599,37 +600,27 @@ img.hoverShadow {
     width: 100vw;
   }
 
-  /* Desktop THING TO FW*/
   .slideshowInnerContainer {
     width: 100vw;
     height: 95vh;
   }
   .slideshowInnerContainer img {
     margin-top: 0vh;
-    /* width: 50%; */
   }
+
+  /* @vaibhav here */
+
   .textContainer {
     width: 40%;
-    /* background-color: blue; */
     height: 70vh;
     overflow-y: scroll;
     scrollbar-width: none;
     padding: 1em;
     color: #fcfeff;
-    /* position: relative; */
-    /* z-index: 99999999; */
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
   }
-  .textContainerInner {
-    /* background-color: aquamarine; */
-    /* display: flex;
-    flex-direction: column; */
-    /* justify-content: center; */
-    /* align-items: center; */
-  }
+
   /* EDIT SIZES AS REQUIRED @VAIBHAV */
   .captionTitle {
     font-size: 1.5em;
@@ -663,6 +654,8 @@ img.hoverShadow {
     margin: 0;
     max-width: 80%;
   }
+  /* end of edits */
+
   .caption .hideControlsBar {
     height: 100vh;
   }
@@ -700,15 +693,15 @@ img.hoverShadow {
 }
 
 @media screen and (min-width: 53em) {
-  /* IMAGE CLASS */
+  /* @vaibhav here
+      i am not sure why i added image css here and not in 42em wala media query
+      we might have to edit this and that so that both sizes pe it looks good accordingly
+   */
   .slideshowImg {
     display: flex;
-    /* width: 50%; */
     justify-content: center;
     align-items: center;
     height: 70vh;
-    /* margin-top: 7vh; */
-    /* background-color: aliceblue; */
     flex: 1 1 60%;
   }
 
@@ -892,8 +885,8 @@ img.hoverShadow {
 }
 
 @media screen and (max-width: 53em) {
-  /* Small screens thing to FW */
-  /* IMAGE CLASS */
+  /* Small screen? @vaibhav here*/
+
   .slideshowImg {
     display: flex;
     justify-content: center;
@@ -901,7 +894,15 @@ img.hoverShadow {
     text-align: center;
     width: 100vw;
     height: 70vh;
-    /* background-color: blue; */
+  }
+  /* start here */
+  .slideshowInnerContainer {
+    flex-direction: column;
+    /* height: 100vh; */
+  }
+  .emblaViewport {
+    height: 50%;
+    width: 100%;
   }
 
   .slideshowImg img {
@@ -1277,7 +1278,7 @@ img.hoverShadow {
   --slide-size: 100%;
   --slide-height: 19rem;
 }
-
+/* @vaibhav here - this was there in the initial lib itself, might have to edit this*/
 .emblaViewport {
   overflow: hidden;
 }
@@ -1389,6 +1390,7 @@ img.hoverShadow {
   border: none;
   cursor: pointer;
 }
+/* @vaibhav here - we can add height and width here instead in the tsx file */
 
 /* Styling from react-zoom-pan-pinch library */
 .reactTransformWrapper {

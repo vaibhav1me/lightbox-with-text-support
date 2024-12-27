@@ -3001,9 +3001,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                       </div>
 
                       {isTextBox() ? (<div className={styles.textContainer}>
-                        {/* <div key={'imgCaptionNew' + slideIndex}> */}
                         {getImageText()}
-                        {/* </div> */}
                       </div>) : null}
 
                     </div>
