@@ -459,7 +459,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
         }
       }
     }
-
+ 
   }
 
   const delta = 6;
@@ -538,6 +538,8 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     }
   }
 
+
+  /* Comment:- Function for checking if an image has caption or not */
   const isImageCaption = () => {
     if (props.images && props.images.length > 0) {
       if (props.images[slideIndex]?.caption) {
@@ -546,6 +548,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     }
     return false
   }
+
   const isTextBox = () => {
     if (props.images && props.images.length > 0) {
       if (props.images[slideIndex]?.captionTitle) {
@@ -1721,6 +1724,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
     }
   }
 
+  /*Comment:-  Function for getting imageText i.e. image Description */
   const getImageText = (): JSX.Element | null => {
     if (props.images && props.images.length > 0) {
       return (
@@ -1755,88 +1759,88 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
   const regularImgPaneNodes = Array.apply(null, Array(images.length)).map(
     (_, index) => {
       return (
+        /* Comment:- It is the div for the image that is being displayed when lightbox opens */
         <div key={index}>
-          {
-            enableMagnifyingGlass == true ? (
-              <div></div>
-              // <Magnifier
-              //   src={images[index].src!}
-              //   className={`${styles.magnifyWrapper} ${styles.lightboxImg}`}
-              //   height={imgContainHeight}
-              //   width={imgContainWidth}
-              //   mgShowOverflow={false}
-              // />
-            )
-
-              : (
-                <>
-                  <div className={getEmblaClass(index)} onTouchStart={onTouchStart} onTouchMove={onTouchMove}
-                    onTouchEnd={onTouchEnd} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
-
-                    <TransformWrapper
-                      ref={(el) => (zoomReferences.current[index] = el)}
-                      onWheel={(ref, wheelEvent) => {
-                        initZoom(ref)
-                      }}
-                      disabled={disableZoom}
-                      panning={{
-                        disabled: isPanningDisabled()
-                      }}
-
-                      key={index}
-                      onZoom={
-                        (ref, event) => {
-                          initZoom(ref)
-                        }
+          {enableMagnifyingGlass == true ? (
+            <div></div>
+          ) : (
+            // <Magnifier
+            //   src={images[index].src!}
+            //   className={`${styles.magnifyWrapper} ${styles.lightboxImg}`}
+            //   height={imgContainHeight}
+            //   width={imgContainWidth}
+            //   mgShowOverflow={false}
+            // />
+            <>
+              <div
+                className={getEmblaClass(index)}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+              >
+                <TransformWrapper
+                  ref={(el) => (zoomReferences.current[index] = el)}
+                  onWheel={(ref, wheelEvent) => {
+                    initZoom(ref);
+                  }}
+                  disabled={disableZoom}
+                  panning={{
+                    disabled: isPanningDisabled(),
+                  }}
+                  key={index}
+                  onZoom={(ref, event) => {
+                    initZoom(ref);
+                  }}
+                  onZoomStop={(ref, event) => {
+                    initZoom(ref);
+                  }}
+                  onTransformed={(ref, event) => {
+                    initZoom(ref);
+                  }}
+                  onPinchingStop={(ref, event) => {
+                    initZoom(ref);
+                  }}
+                  centerZoomedOut={true}
+                  initialScale={1}
+                  maxScale={maxScale}
+                  alignmentAnimation={{ sizeX: 0, sizeY: 0 }}
+                >
+                  <TransformComponent
+                    wrapperClass={styles.reactTransformWrapper}
+                    contentClass={styles.reactTransformComponent}
+                    wrapperStyle={{
+                      width: "100%",
+                      height: "70vh",
+                      // margin: 'auto'
+                    }}
+                    contentStyle={{
+                      width: "100%",
+                      height: "70vh",
+                      // margin: 'auto',
+                      display: "flex",
+                      // backgroundColor: 'orange',
+                      // flexWrap: 'nowrap',
+                    }}
+                    key={index}
+                  >
+                    <div
+                      className={`${styles.slideshowImg} ${
+                        props.lightboxImgClass ? props.lightboxImgClass : ""
                       }
-                      onZoomStop={(ref, event) => { initZoom(ref) }}
-                      onTransformed={
-                        (ref, event) => {
-                          initZoom(ref)
-                        }
-                      }
-                      onPinchingStop={(ref, event) => {
-                        initZoom(ref)
-                      }}
-                      centerZoomedOut={true}
-                      initialScale={1}
-                      maxScale={maxScale}
-                      alignmentAnimation={{ sizeX: 0, sizeY: 0 }}
-                    >
-                      <TransformComponent
-                        wrapperClass={styles.reactTransformWrapper}
-                        contentClass={styles.reactTransformComponent}
-                        wrapperStyle={{
-                          width: '100%',
-                          height: '70vh',
-                          // margin: 'auto'
-                        }}
-                        contentStyle={
-                          {
-                            width: '100%',
-                            height: '70vh',
-                            // margin: 'auto',
-                            display: 'flex',
-                            // backgroundColor: 'orange',
-                            // flexWrap: 'nowrap',
-                          }
-                        }
-                        key={index}
-                      >
-                        <div
-                          className={`${styles.slideshowImg} ${props.lightboxImgClass ? props.lightboxImgClass : ""}
                       ${displayImgMetadata ? styles.slideshowImgMetadata : ""}
                       `}
-                        >
-                          {getLightboxElem(index)}
-                        </div>
-                      </TransformComponent>
-                    </TransformWrapper>
-                  </div>
-                </>
-              )}
+                    >
+                      {getLightboxElem(index)}
+                    </div>
+                  </TransformComponent>
+                </TransformWrapper>
+              </div>
+            </>
+          )}
         </div>
-      )
+      );
     }
   )
 
@@ -2910,7 +2914,6 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                     </motion.div>
                   </section>
                   {displayArrows() ?
-
                     <div>
                       <div
                         className={
@@ -2987,6 +2990,8 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
                         </div>
                         : null}
+
+                        {/* Comment:- Image view code here*/}
                       <div className={`${styles.emblaViewport}
                             ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}
                         ref={showModal ? emblaRef : null}>
@@ -3000,11 +3005,29 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                         </div>
                       </div>
 
+                      {/* Comment:- Image Text here */}
+
                       {isTextBox() ? (<div className={styles.textContainer}>
                         {/* <div key={'imgCaptionNew' + slideIndex}> */}
                         {getImageText()}
                         {/* </div> */}
                       </div>) : null}
+
+                        {/* Comment:- Check what is the difference between rendering text as above or shown below?? */}
+
+                      {/* {isTextBox() ? (
+                        <div className={`${styles.emblaViewport}
+                            ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}>
+                        <div className={`
+                          ${imgAnimation == "fade" ? styles.imgfade : ""}
+                          ${styles.emblaContainer}
+                            ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}>
+
+                          {getImageText()}
+
+                        </div>
+                      </div>
+                      ) : null } */}
 
                     </div>
 
@@ -3024,6 +3047,8 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                       getThumbnailsOuterContainerStyle()
                     }
                   >
+                    {/* Comment: ------------- Captions here --------------- */}
+                    
                     {isImageCaption() ? (
                       <div className={`${styles.imgTitleContainer} imageModal`}>
                         <p
