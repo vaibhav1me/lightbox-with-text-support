@@ -3008,9 +3008,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                       {/* Comment:- Image Text here */}
 
                       {isTextBox() ? (<div className={styles.textContainer}>
-                        {/* <div key={'imgCaptionNew' + slideIndex}> */}
                         {getImageText()}
-                        {/* </div> */}
                       </div>) : null}
 
                         {/* Comment:- Check what is the difference between rendering text as above or shown below?? */}
