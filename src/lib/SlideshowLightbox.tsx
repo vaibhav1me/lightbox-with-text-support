@@ -2953,7 +2953,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
                     <div
                       className={`${styles.slideshowInnerContainerThumbnails
-                        } ${styles.embla} ${isImageCaption() && showControlsBar == true ? styles.slideImageAndCaption : ''
+                        } ${styles.embla} img_and_text_container ${isImageCaption() && showControlsBar == true ? styles.slideImageAndCaption : ''
                         } 
                           ${styles.slideshowInnerContainer}
                           ${props.showControlsBar == false || props.fullScreen
@@ -2962,7 +2962,8 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                         }
                           ${displayImgMetadata ? styles.slideshowInnerContainerImgMetadata : ""}  `}>
 
-                      {shouldDisplayMetadataPanel() ?
+                        {/* Comment:- I commented this, there was no change */}
+                      {/* {shouldDisplayMetadataPanel() ?
                         <div className={styles.metadata}
                           style={getMetadataPanelStyle()}>
                           {isLoading ? null :
@@ -2989,10 +2990,10 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
 
                         </div>
-                        : null}
+                        : null} */}
 
                         {/* Comment:- Image view code here*/}
-                      <div className={`${styles.emblaViewport}
+                      <div className={` ${styles.emblaViewport}
                             ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}
                         ref={showModal ? emblaRef : null}>
                         <div className={`
@@ -3006,8 +3007,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
                       </div>
 
                       {/* Comment:- Image Text here */}
-
-                      {isTextBox() ? (<div className={styles.textContainer}>
+                      {isTextBox() && window.innerWidth > 850 ? (<div className={`${styles.textContainer}`}>
                         {getImageText()}
                       </div>) : null}
 
