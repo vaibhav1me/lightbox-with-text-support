@@ -7,6 +7,15 @@
   box-sizing: border-box;
 }
 
+/* .lightboxjs img,
+  .lightboxjs svg,
+  .lightboxjs video {
+    display: block;
+    vertical-align: middle;
+    height: auto;
+    max-width: 100%;
+  } */
+
 .slideshowContainer {
   height: 100vh;
   width: 100vw;
@@ -89,19 +98,6 @@ img.hoverShadow {
   flex-direction: row;
   flex-wrap: wrap;
 }
-
-/* @vaibhav here */
-  .textContainer {
-    width: 40%;
-    height: 65vh;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    padding: 1em;
-    color: #fcfeff;
-    display: flex;
-    flex-direction: column;
-  }
-
 
 /* Mobile screens */
 @media screen and (min-width: 20em) {
@@ -275,15 +271,21 @@ img.hoverShadow {
 }
 
 /* @vaibhav here */
-/* This is the container that contains image and its text */
 .slideshowInnerContainer {
+  position: fixed;
   display: flex;
+  /* flex-direction: column; */
   justify-content: center;
   transition: top 0.2s ease-in-out 0s;
+  top: 10%;
   align-content: center;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
   z-index: 1000000;
   flex-wrap: nowrap;
+  /* background-color: orange; */
+  /* background-color: aqua;  no point */
 }
 
 .slideshowInnerContainerImgMetadata {
@@ -394,41 +396,6 @@ img.hoverShadow {
   margin-right: auto;
 }
 
-/* EDIT SIZES AS REQUIRED @VAIBHAV */
-  .captionTitle {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 0.5em;
-    text-align: left;
-  }
-  .captionQuote {
-    font-style: italic;
-    max-width: 80%;
-    text-align: left;
-    color: gray;
-    /* edit size? */
-  }
-  .captionDescription {
-    font-size: 1em;
-    margin-top: 1em;
-    max-width: 80%;
-    text-align: left;
-    /* edit size? */
-  }
-  .sectionHeading {
-    text-align: left;
-    padding-bottom: 0;
-    margin-bottom: 0.25em;
-  }
-  .sectionContentUl {
-    list-style-type: none;
-    text-align: left;
-    padding: 0;
-    margin: 0;
-    max-width: 80%;
-  }
-  /* end of edits */
-
 .videoIconsHeader {
   position: fixed;
   top: 4%;
@@ -464,39 +431,17 @@ img.hoverShadow {
   /* width: 32px;  */
 }
 
-.lightboxContainer{ 
-  /* overflow-y: scroll; */
-}
-/* @Vaibhavadded */
-.slideshowInnerContainer {
-  width: 100vw;
-  height: 95vh;
-  position: absolute;
-}
-
-.lightboxImg{
-  height: 100% !important;
-  margin-left: 1rem;
-}
-@media screen and (max-width: 850px) {
-   .imgTitleContainer{
-    width: 100%;
-   }
-  .emblaViewport{
-    width: 100vw !important;
-  }
-  .reactTransformComponent{
-    display: flex;
-    justify-content: center;
-  }
-}
-
 @media screen and (min-width: 6em) {
   .iconsHeader {
     top: 3%;
   }
 
+  .slideshowAnimContainer {
+    width: 100vw;
+  }
+
   .iconsHeader svg {
+    /* width: 34px;  */
     padding-right: 0.3em;
   }
 
@@ -506,6 +451,7 @@ img.hoverShadow {
 
   .thumbnail {
     height: 9vh;
+    /* width: 22vw; */
   }
 
   .next1 {
@@ -518,7 +464,10 @@ img.hoverShadow {
 }
 
 @media screen and (min-width: 39em) {
-  /* @vaibhav:- Important */
+  .slideshowAnimContainer {
+    width: 100vw;
+  }
+
   .slideshowInnerContainer {
     width: 100vw;
     height: 95vh;
@@ -587,7 +536,11 @@ img.hoverShadow {
     margin-right: auto;
     scrollbar-gutter: stable both-edges;
   }
-  
+  /*@jeevs  we only want 50% in desktop screens */
+  .emblaViewport {
+    width: 50%;
+  }
+
   .fullScreenContainer img {
     width: 100vw;
   }
@@ -648,12 +601,61 @@ img.hoverShadow {
   }
 
   .slideshowInnerContainer {
-    /* width: 100vw;
-    height: 95vh; */
+    width: 100vw;
+    height: 95vh;
   }
   .slideshowInnerContainer img {
     margin-top: 0vh;
   }
+
+  /* @vaibhav here */
+
+  .textContainer {
+    width: 40%;
+    height: 70vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    padding: 1em;
+    color: #fcfeff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* EDIT SIZES AS REQUIRED @VAIBHAV */
+  .captionTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: left;
+  }
+  .captionQuote {
+    font-style: italic;
+    max-width: 80%;
+    text-align: left;
+    color: gray;
+    /* edit size? */
+  }
+  .captionDescription {
+    font-size: 1em;
+    margin-top: 1em;
+    max-width: 80%;
+    text-align: left;
+    /* edit size? */
+  }
+  .sectionHeading {
+    text-align: left;
+    padding-bottom: 0;
+    margin-bottom: 0.25em;
+  }
+  .sectionContentUl {
+    list-style-type: none;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    max-width: 80%;
+  }
+  /* end of edits */
+
   .caption .hideControlsBar {
     height: 100vh;
   }
@@ -699,7 +701,8 @@ img.hoverShadow {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: auto;
+    height: 70vh;
+    flex: 1 1 60%;
   }
 
   .hideControlsBar .slideshowImg,
@@ -884,37 +887,37 @@ img.hoverShadow {
 @media screen and (max-width: 53em) {
   /* Small screen? @vaibhav here*/
 
-  /* .slideshowImg {
+  .slideshowImg {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 100vw;
     height: 70vh;
-  } */
+  }
   /* start here */
   .slideshowInnerContainer {
-    /* flex-direction: column; */
+    flex-direction: column;
     /* height: 100vh; */
   }
-  /* .emblaViewport {
+  .emblaViewport {
     height: 50%;
     width: 100%;
-  } */
+  }
 
   .slideshowImg img {
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* .slideshowImg {
+  .slideshowImg {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 100vw;
     height: 70vh;
-  } */
+  }
 
   .slideshowInnerContainerFullScreen {
     position: fixed;
@@ -1278,7 +1281,6 @@ img.hoverShadow {
 /* @vaibhav here - this was there in the initial lib itself, might have to edit this*/
 .emblaViewport {
   overflow: hidden;
-  width: 50%;
 }
 
 .emblaContainer {
@@ -1296,10 +1298,9 @@ img.hoverShadow {
   */
 }
 
-/* Comment:- No effect of these */
 .emblaContainerImgMetadata {
-  /* width: 78vw; */
-  /* max-width: 78vw; */
+  width: 78vw;
+  max-width: 78vw;
 }
 
 .imgdrag .emblaSlide {
