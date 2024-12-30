@@ -4,25 +4,22 @@ import './App.css'
 import { useState } from "react";
 import img from "/nick-design-8RrPve9MCDc-unsplash.jpg";
 import img2 from "/pexels-photo-2071882.jpeg";
-import moon from "/moon-1-min.jpg";
+
 function App() {
 
   const data = [
     {
       src: img,
-      caption: "C / 2022 E3(ZTF) – Untracked",
       captionTitle: "C / 2022 E3(ZTF) – Untracked",
-      captionQuote:
-        "Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail",
-      captionDescription:
-        "Presenting you a cosmic gift, glowing in all its green and glory, C / 2022 E3(ZTF), once in 50,000 years wonder, yet another tale that's temporary.",
+      captionQuote: "Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail Lurking in space, lingering its tail",
+      captionDescription: "Presenting you a cosmic gift, glowing in all its green and glory, C / 2022 E3(ZTF), once in 50,000 years wonder, yet another tale that's temporary.",
       imageDetails: [
         {
           heading: "Equipment used:",
           content: [
             "Camera model: Nikon D5600",
             "Imaging scope: Celestron Omni XLT 120, 1000mm focal length, 120mm aperture",
-            "Mount: Celestron Omni CG4",
+            "Mount: Celestron Omni CG4"
           ],
         },
         {
@@ -32,7 +29,7 @@ function App() {
             "ISO: 25600",
             "Lights: 530",
             "Darks: 8",
-            "No flats, dark - flats, bias frames were used.",
+            "No flats, dark - flats, bias frames were used."
           ],
         },
         {
@@ -41,14 +38,13 @@ function App() {
             "All images stacked in Siril",
             "Stars and Comet stacked separately",
             "No colour calibration.",
-            "Stars and Comet combined in photoshop",
+            "Stars and Comet combined in photoshop"
           ],
         },
       ],
     },
     {
       src: img2,
-      caption: "2",
       captionTitle: "2",
       captionQuote: "2...",
       captionDescription: "2....",
@@ -82,7 +78,6 @@ function App() {
     },
     {
       src: img2,
-      caption: "Yeh mera caption hai"
     },
     {
       src: img,
