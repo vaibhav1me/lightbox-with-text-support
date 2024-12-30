@@ -85,7 +85,7 @@ function App() {
       caption: "Yeh mera caption hai"
     },
     {
-      src: moon,
+      src: img,
       caption: "Yeh mera caption hai"
     },
   ];
