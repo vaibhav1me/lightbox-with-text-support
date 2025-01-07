@@ -1724,7 +1724,7 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
   const getImageText = (): JSX.Element | null => {
     if (props.images && props.images.length > 0) {
       return (
-        <div key={slideIndex} className={styles.textContainerInner}>
+        <div key={slideIndex} className={styles.textContainerInner} style={{width: "100%"}}>
           <p className={styles.captionTitle}>
             {props.images[slideIndex].captionTitle}
           </p>
@@ -2581,553 +2581,661 @@ export const SlideshowLightbox: React.FC<SlideshowLightboxProps> = React.forward
 
   }
 
-  return <div className={`${initWrapperClassname()}`}>
+  return (
+    <div className={`${initWrapperClassname()}`}>
+      {renderPreviewImages()}
 
-    {renderPreviewImages()}
+      {/* <AnimateSharedLayout> */}
 
-    {/* <AnimateSharedLayout> */}
-
-    <AnimatePresence initial={false} mode={"wait"}>
-      {showModal !== false && (
-        <Portal>
-          <Div100vh>
-            <motion.div className={`${styles.modalContainer}`}
-              initial={"inactive"}
-              variants={variants}
-              animate={showModal ? "active" : "inactive"}
-              exit={"inactive"}
-              transition={
-                { duration: "0.3" }
-              }
-              onAnimationComplete={() => {
-                let animEntered = !animationEntered;
-                setAnimationEntered(animEntered);
-
-                if (animEntered == true) {
-                  let prevFocusedElement: any = document.activeElement;
-                  setPrevFocusedElem(prevFocusedElement)
-
-                  document.getElementById("lightboxContainer")?.focus();
-                }
-                else {
-                  prevFocusedElem?.focus();
-                }
-                if (emblaApi) emblaApi.reInit()
-              }}
-            >
+      <AnimatePresence initial={false} mode={"wait"}>
+        {showModal !== false && (
+          <Portal>
+            <Div100vh>
               <motion.div
-                className={`${styles.slideshowAnimContainer}`}
-                key='slideshowAnimContainer'
+                className={`${styles.modalContainer}`}
+                initial={"inactive"}
+                variants={variants}
+                animate={showModal ? "active" : "inactive"}
+                exit={"inactive"}
+                transition={{ duration: "0.3" }}
+                onAnimationComplete={() => {
+                  let animEntered = !animationEntered;
+                  setAnimationEntered(animEntered);
 
-                id='slideshowAnim'
-                style={{
-                  backgroundColor: backgroundColor,
-                  width: lightboxModalWidth,
+                  if (animEntered == true) {
+                    let prevFocusedElement: any = document.activeElement;
+                    setPrevFocusedElem(prevFocusedElement);
+
+                    document.getElementById("lightboxContainer")?.focus();
+                  } else {
+                    prevFocusedElem?.focus();
+                  }
+                  if (emblaApi) emblaApi.reInit();
                 }}
-
               >
-                <div className={`${styles.lightboxContainer}`} id="lightboxContainer" tabIndex={-1} role="dialog"
-                  onClick={(e) => { if (modalCloseOption == "clickOutside") { checkModalClick(e) } }}>
-                  <section
-                    className={`${styles.iconsHeader} ${iconColor ? '' : getIconStyle()
-                      } imageModal`}
-                    style={{ color: iconColor }}
+                <motion.div
+                  className={`${styles.slideshowAnimContainer}`}
+                  key="slideshowAnimContainer"
+                  id="slideshowAnim"
+                  style={{
+                    backgroundColor: backgroundColor,
+                    width: lightboxModalWidth,
+                  }}
+                >
+                  <div
+                    className={`${styles.lightboxContainer}`}
+                    id="lightboxContainer"
+                    tabIndex={-1}
+                    role="dialog"
+                    onClick={(e) => {
+                      if (modalCloseOption == "clickOutside") {
+                        checkModalClick(e);
+                      }
+                    }}
                   >
-                    <KeyHandler
-                      keyValue={'ArrowLeft'}
-                      code={'37'}
-                      onKeyHandle={() => {
-                        prevSlide()
-                      }}
-                    />
-                    <KeyHandler
-                      keyValue={'ArrowRight'}
-                      code={'39'}
-                      onKeyHandle={() => {
-                        nextSlide()
-                      }}
-                    />
-                    <KeyHandler
-                      keyValue={'Escape'}
-                      code={'27'}
-                      onKeyHandle={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        if (!isBrowserFullScreen) {
-                          closeModal()
-                        }
-                      }}
-                    />
+                    <section
+                      className={`${styles.iconsHeader} ${
+                        iconColor ? "" : getIconStyle()
+                      } imageModal`}
+                      style={{ color: iconColor }}
+                    >
+                      <KeyHandler
+                        keyValue={"ArrowLeft"}
+                        code={"37"}
+                        onKeyHandle={() => {
+                          prevSlide();
+                        }}
+                      />
+                      <KeyHandler
+                        keyValue={"ArrowRight"}
+                        code={"39"}
+                        onKeyHandle={() => {
+                          nextSlide();
+                        }}
+                      />
+                      <KeyHandler
+                        keyValue={"Escape"}
+                        code={"27"}
+                        onKeyHandle={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          if (!isBrowserFullScreen) {
+                            closeModal();
+                          }
+                        }}
+                      />
 
-                    {/* Support for Internet Explorer and Edge key values  */}
-                    <KeyHandler
-                      keyValue={'Left'}
-                      code={'37'}
-                      onKeyHandle={() => {
-                        prevSlide()
-                      }}
-                    />
-                    <KeyHandler
-                      keyValue={'Right'}
-                      code={'39'}
-                      onKeyHandle={() => {
-                        nextSlide()
-                      }}
-                    />
-                    <KeyHandler
-                      keyValue={'Esc'}
-                      code={'27'}
-                      onKeyHandle={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        if (!isBrowserFullScreen) {
-                          closeModal()
-                        }
-                      }}
-                    />
+                      {/* Support for Internet Explorer and Edge key values  */}
+                      <KeyHandler
+                        keyValue={"Left"}
+                        code={"37"}
+                        onKeyHandle={() => {
+                          prevSlide();
+                        }}
+                      />
+                      <KeyHandler
+                        keyValue={"Right"}
+                        code={"39"}
+                        onKeyHandle={() => {
+                          nextSlide();
+                        }}
+                      />
+                      <KeyHandler
+                        keyValue={"Esc"}
+                        code={"27"}
+                        onKeyHandle={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          if (!isBrowserFullScreen) {
+                            closeModal();
+                          }
+                        }}
+                      />
 
-                    {showControls == true && (
-                      <div className={`${styles.controls}`}>
-                        {disableZoom ||
-                          displayMagnificationIcons == false ? null :
-                          <motion.div>
-                            <button onClick={() => {
-                              if (enableMagnifyingGlass) {
-                                initMagnifyingGlass()
-                              }
-                              if (zoomReferences.current[zoomIdx] != null) {
-                                zoomReferences.current[zoomIdx]!.zoomIn()
-                              }
-                              setZoomedIn(true)
-                            }}>
-                              <ZoomIn
-                                size={24}
-                                color={iconColor ? iconColor : undefined}
-                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                  }`}
-                                style={iconColor ? { color: iconColor } : {}}
-                              />
-                            </button>
-
-                          </motion.div>
-                        }
-
-                        {disableZoom ||
-                          displayMagnificationIcons == false ? null :
-                          <motion.div>
-                            <button
-                              onClick={() => {
-                                zoomReferences.current[zoomIdx]!.zoomOut();
-                                let scale = zoomReferences.current[zoomIdx]!.state.scale;
-
-                                if (scale == 1 || scale == 1.65) {
-                                  setZoomedIn(false)
-                                }
-
-                              }}>
-                              <ZoomOut
-                                size={24}
-                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                  }`}
-                                style={iconColor ? { color: iconColor } : {}}
-                                color={iconColor ? iconColor : undefined}
-
-                              />
-                            </button>
-
-                          </motion.div>
-                        }
-
-                        {displayDownloadBtn() ? (
-                          <button
-                            onClick={() => {
-                              saveImage()
-                            }}>
-                            <Download
-                              size={24}
-                              className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                }`}
-                              style={iconColor ? { color: iconColor } : {}}
-                              color={iconColor ? iconColor : undefined}
-
-                            />
-                          </button>
-
-                        ) : null}
-
-                        {displayFullScreenIcon ? (
-                          isBrowserFullScreen ? (
+                      {showControls == true && (
+                        <div className={`${styles.controls}`}>
+                          {disableZoom ||
+                          displayMagnificationIcons == false ? null : (
                             <motion.div>
                               <button
                                 onClick={() => {
-                                  isBrowserFullScreen
-                                    ? exitFullScreen()
-                                    : fullScreen()
-                                }}>
-                                <FullscreenExit
+                                  if (enableMagnifyingGlass) {
+                                    initMagnifyingGlass();
+                                  }
+                                  if (zoomReferences.current[zoomIdx] != null) {
+                                    zoomReferences.current[zoomIdx]!.zoomIn();
+                                  }
+                                  setZoomedIn(true);
+                                }}
+                              >
+                                <ZoomIn
                                   size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                    }`}
-                                  style={iconColor ? { color: iconColor } : {}}
                                   color={iconColor ? iconColor : undefined}
-
-                                />
-                              </button>
-
-                            </motion.div>
-                          ) : (
-                            <motion.div>
-                              <button onClick={() => {
-                                isBrowserFullScreen
-                                  ? exitFullScreen()
-                                  : fullScreen()
-                              }}>
-                                <Fullscreen
-                                  size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                    }`}
-                                  style={iconColor ? { color: iconColor } : {}}
-                                  color={iconColor ? iconColor : undefined}
-
-                                />
-                              </button>
-
-                            </motion.div>
-                          )
-                        ) : null}
-
-                        {isMobile && displayImgMetadata ?
-                          <motion.div>
-                            <button onClick={() => {
-                              setShowImgMetadataPanel(!showImgMetadataPanel)
-                              setDisplayLoader(false)
-                            }}>
-                              <InfoCircle
-                                size={24}
-                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                                  className={`${styles.lightboxjsIcon} ${
+                                    iconColor ? "" : getIconStyle()
                                   }`}
-                                style={iconColor ? { color: iconColor } : {}}
-                                color={iconColor ? iconColor : undefined}
-                              />
-                            </button>
+                                  style={iconColor ? { color: iconColor } : {}}
+                                />
+                              </button>
+                            </motion.div>
+                          )}
 
-                          </motion.div> : null}
+                          {disableZoom ||
+                          displayMagnificationIcons == false ? null : (
+                            <motion.div>
+                              <button
+                                onClick={() => {
+                                  zoomReferences.current[zoomIdx]!.zoomOut();
+                                  let scale =
+                                    zoomReferences.current[zoomIdx]!.state
+                                      .scale;
 
-                        {displayThumbnailIcon ? (
-                          <motion.div>
+                                  if (scale == 1 || scale == 1.65) {
+                                    setZoomedIn(false);
+                                  }
+                                }}
+                              >
+                                <ZoomOut
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${
+                                    iconColor ? "" : getIconStyle()
+                                  }`}
+                                  style={iconColor ? { color: iconColor } : {}}
+                                  color={iconColor ? iconColor : undefined}
+                                />
+                              </button>
+                            </motion.div>
+                          )}
+
+                          {displayDownloadBtn() ? (
                             <button
                               onClick={() => {
-                                setShowThumbnails(!showThumbnails)
-                              }}>
-                              <GridFill
-                                size={24}
-                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                  }`}
-                                style={iconColor ? { color: iconColor } : {}}
-                                color={iconColor ? iconColor : undefined}
-
-                              />
-                            </button>
-
-                          </motion.div>
-                        ) : null}
-
-                        {shouldDisplayMagnifyingGlassIcon() ? (
-                          <motion.div>
-                            <button
-                              onClick={() => initMagnifyingGlass()}
+                                saveImage();
+                              }}
                             >
-                              <Search
+                              <Download
                                 size={24}
-                                className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                  }`}
+                                className={`${styles.lightboxjsIcon} ${
+                                  iconColor ? "" : getIconStyle()
+                                }`}
                                 style={iconColor ? { color: iconColor } : {}}
                                 color={iconColor ? iconColor : undefined}
                               />
                             </button>
+                          ) : null}
 
-                          </motion.div>
-                        ) : null}
-
-                        {shouldDisplaySlideshowIcon() ? (
-                          <motion.div className={styles.slideshowPlayBtn}>
-                            {isSlideshowPlaying ? (
-                              <button onClick={() => {
-                                isSlideshowPlaying
-                                  ? stopSlideshow()
-                                  : playSlideshow()
-                              }}>
-                                <PauseCircleFill
-                                  size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                          {displayFullScreenIcon ? (
+                            isBrowserFullScreen ? (
+                              <motion.div>
+                                <button
+                                  onClick={() => {
+                                    isBrowserFullScreen
+                                      ? exitFullScreen()
+                                      : fullScreen();
+                                  }}
+                                >
+                                  <FullscreenExit
+                                    size={24}
+                                    className={`${styles.lightboxjsIcon} ${
+                                      iconColor ? "" : getIconStyle()
                                     }`}
-                                  style={iconColor ? { color: iconColor } : {}}
-                                  color={iconColor ? iconColor : undefined}
-
-                                />
-                              </button>
-
+                                    style={
+                                      iconColor ? { color: iconColor } : {}
+                                    }
+                                    color={iconColor ? iconColor : undefined}
+                                  />
+                                </button>
+                              </motion.div>
                             ) : (
-                              <button onClick={() => {
-                                isSlideshowPlaying
-                                  ? stopSlideshow()
-                                  : playSlideshow()
-                              }}>
-                                <PlayCircleFill
-                                  size={24}
-                                  className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                              <motion.div>
+                                <button
+                                  onClick={() => {
+                                    isBrowserFullScreen
+                                      ? exitFullScreen()
+                                      : fullScreen();
+                                  }}
+                                >
+                                  <Fullscreen
+                                    size={24}
+                                    className={`${styles.lightboxjsIcon} ${
+                                      iconColor ? "" : getIconStyle()
                                     }`}
+                                    style={
+                                      iconColor ? { color: iconColor } : {}
+                                    }
+                                    color={iconColor ? iconColor : undefined}
+                                  />
+                                </button>
+                              </motion.div>
+                            )
+                          ) : null}
+
+                          {isMobile && displayImgMetadata ? (
+                            <motion.div>
+                              <button
+                                onClick={() => {
+                                  setShowImgMetadataPanel(
+                                    !showImgMetadataPanel
+                                  );
+                                  setDisplayLoader(false);
+                                }}
+                              >
+                                <InfoCircle
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${
+                                    iconColor ? "" : getIconStyle()
+                                  }`}
                                   style={iconColor ? { color: iconColor } : {}}
                                   color={iconColor ? iconColor : undefined}
-
                                 />
                               </button>
+                            </motion.div>
+                          ) : null}
 
-                            )}
-                          </motion.div>
-                        ) : null}
+                          {displayThumbnailIcon ? (
+                            <motion.div>
+                              <button
+                                onClick={() => {
+                                  setShowThumbnails(!showThumbnails);
+                                }}
+                              >
+                                <GridFill
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${
+                                    iconColor ? "" : getIconStyle()
+                                  }`}
+                                  style={iconColor ? { color: iconColor } : {}}
+                                  color={iconColor ? iconColor : undefined}
+                                />
+                              </button>
+                            </motion.div>
+                          ) : null}
 
-                        {customControlComponent ? <motion.div>{customControlComponent}</motion.div> : null}
-                      </div>
-                    )}
-                    <motion.div className={`${styles.closeIcon} ${props.showControls == false ? styles.mlAuto : ""}`}>
-                      <button id="closeBtn" className={`${props.showControlsBar == false && props.showControls == false
-                        ? styles.closeButtonRounded : styles.closeButton}`}
+                          {shouldDisplayMagnifyingGlassIcon() ? (
+                            <motion.div>
+                              <button onClick={() => initMagnifyingGlass()}>
+                                <Search
+                                  size={24}
+                                  className={`${styles.lightboxjsIcon} ${
+                                    iconColor ? "" : getIconStyle()
+                                  }`}
+                                  style={iconColor ? { color: iconColor } : {}}
+                                  color={iconColor ? iconColor : undefined}
+                                />
+                              </button>
+                            </motion.div>
+                          ) : null}
 
-                        onClick={() => {
-                          closeModal()
-                        }}>
-                        <XLg
-                          id="closeIcon"
-                          size={24}
-                          className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
+                          {shouldDisplaySlideshowIcon() ? (
+                            <motion.div className={styles.slideshowPlayBtn}>
+                              {isSlideshowPlaying ? (
+                                <button
+                                  onClick={() => {
+                                    isSlideshowPlaying
+                                      ? stopSlideshow()
+                                      : playSlideshow();
+                                  }}
+                                >
+                                  <PauseCircleFill
+                                    size={24}
+                                    className={`${styles.lightboxjsIcon} ${
+                                      iconColor ? "" : getIconStyle()
+                                    }`}
+                                    style={
+                                      iconColor ? { color: iconColor } : {}
+                                    }
+                                    color={iconColor ? iconColor : undefined}
+                                  />
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    isSlideshowPlaying
+                                      ? stopSlideshow()
+                                      : playSlideshow();
+                                  }}
+                                >
+                                  <PlayCircleFill
+                                    size={24}
+                                    className={`${styles.lightboxjsIcon} ${
+                                      iconColor ? "" : getIconStyle()
+                                    }`}
+                                    style={
+                                      iconColor ? { color: iconColor } : {}
+                                    }
+                                    color={iconColor ? iconColor : undefined}
+                                  />
+                                </button>
+                              )}
+                            </motion.div>
+                          ) : null}
+
+                          {customControlComponent ? (
+                            <motion.div>{customControlComponent}</motion.div>
+                          ) : null}
+                        </div>
+                      )}
+                      <motion.div
+                        className={`${styles.closeIcon} ${
+                          props.showControls == false ? styles.mlAuto : ""
+                        }`}
+                      >
+                        <button
+                          id="closeBtn"
+                          className={`${
+                            props.showControlsBar == false &&
+                            props.showControls == false
+                              ? styles.closeButtonRounded
+                              : styles.closeButton
+                          }`}
+                          onClick={() => {
+                            closeModal();
+                          }}
+                        >
+                          <XLg
+                            id="closeIcon"
+                            size={24}
+                            className={`${styles.lightboxjsIcon} ${
+                              iconColor ? "" : getIconStyle()
                             }`}
-                          color={iconColor ? iconColor : undefined}
-                          style={getCloseIconBtnStyle()}
-                        />
-                      </button>
-
-                    </motion.div>
-                  </section>
-                  {displayArrows() ?
-
-                    <div>
-                      <div
-                        className={
-                          rightArrowStyle
-                            ? `${styles.next1} ${getArrowStyle()} imageModal`
-                            : "imageModal"
-                        }
-                        style={rightArrowStyle}
-                        onClick={() => {
-                          nextSlide()
-                        }}
-                      >
-                        {nextArrowElem ? nextArrowElem :
-                          <span className={`${props.rightArrowClassname ? props.rightArrowClassname : ""}`}>&#10095;</span>
-                        }
+                            color={iconColor ? iconColor : undefined}
+                            style={getCloseIconBtnStyle()}
+                          />
+                        </button>
+                      </motion.div>
+                    </section>
+                    {displayArrows() ? (
+                      <div>
+                        <div
+                          className={
+                            rightArrowStyle
+                              ? `${styles.next1} ${getArrowStyle()} imageModal`
+                              : "imageModal"
+                          }
+                          style={rightArrowStyle}
+                          onClick={() => {
+                            nextSlide();
+                          }}
+                        >
+                          {nextArrowElem ? (
+                            nextArrowElem
+                          ) : (
+                            <span
+                              className={`${
+                                props.rightArrowClassname
+                                  ? props.rightArrowClassname
+                                  : ""
+                              }`}
+                            >
+                              &#10095;
+                            </span>
+                          )}
+                        </div>
+                        <div
+                          className={
+                            leftArrowStyle
+                              ? `${
+                                  styles.prev1
+                                } ${getArrowStyle()} imageModal ${
+                                  displayImgMetadata ? styles.prev1Metadata : ""
+                                }`
+                              : "imageModal"
+                          }
+                          style={leftArrowStyle}
+                          onClick={() => {
+                            prevSlide();
+                          }}
+                        >
+                          {prevArrowElem ? (
+                            prevArrowElem
+                          ) : (
+                            <span
+                              className={`${
+                                props.leftArrowClassname
+                                  ? props.leftArrowClassname
+                                  : ""
+                              }`}
+                            >
+                              &#10094;
+                            </span>
+                          )}
+                        </div>
                       </div>
+                    ) : null}
+
+                    <AnimatePresence initial={false} custom={direction}>
                       <div
-                        className={
-                          leftArrowStyle
-                            ? `${styles.prev1} ${getArrowStyle()} imageModal ${displayImgMetadata ? styles.prev1Metadata : ""}`
-                            : "imageModal"
-                        }
-                        style={leftArrowStyle}
-                        onClick={() => {
-                          prevSlide()
-                        }}
-                      >
-                        {prevArrowElem ? prevArrowElem :
-                          <span className={`${props.leftArrowClassname ? props.leftArrowClassname : ""}`}>&#10094;</span>
-                        }
-                      </div>
-                    </div>
-                    : null
-                  }
-
-                  <AnimatePresence initial={false} custom={direction}>
-
-                    <div
-                      className={`${styles.slideshowInnerContainerThumbnails
-                        } ${styles.embla} ${isImageCaption() && showControlsBar == true ? styles.slideImageAndCaption : ''
+                        className={`${
+                          styles.slideshowInnerContainerThumbnails
+                        } ${styles.embla} ${
+                          isImageCaption() && showControlsBar == true
+                            ? styles.slideImageAndCaption
+                            : ""
                         } 
                           ${styles.slideshowInnerContainer}
-                          ${props.showControlsBar == false || props.fullScreen
-                          ? styles.hideControlsBar
-                          : ""
-                        }
-                          ${displayImgMetadata ? styles.slideshowInnerContainerImgMetadata : ""}  `}>
-
-                      {shouldDisplayMetadataPanel() ?
-                        <div className={styles.metadata}
-                          style={getMetadataPanelStyle()}>
-                          {isLoading ? null :
-                            <div className={styles.metadataInnerContainer}>
-
-                              {getMetadataPanel()}
-
-                              {isMobile && showImgMetadataPanel ?
-                                <button className={styles.imgMetadataCloseBtn}
-                                  onClick={() => {
-                                    setShowImgMetadataPanel(false)
-                                  }}>
-                                  <XLg
-                                    size={24}
-                                    className={`${styles.lightboxjsIcon} ${iconColor ? '' : getIconStyle()
-                                      }`}
-                                    color={iconColor ? iconColor : undefined}
-                                    style={iconColor ? { color: iconColor } : {}}
-                                  />
-                                </button> : null
-                              }
-                            </div>
+                          ${
+                            props.showControlsBar == false || props.fullScreen
+                              ? styles.hideControlsBar
+                              : ""
                           }
+                          ${
+                            displayImgMetadata
+                              ? styles.slideshowInnerContainerImgMetadata
+                              : ""
+                          }  `}
+                      >
+                        {shouldDisplayMetadataPanel() ? (
+                          <div
+                            className={styles.metadata}
+                            style={getMetadataPanelStyle()}
+                          >
+                            {isLoading ? null : (
+                              <div className={styles.metadataInnerContainer}>
+                                {getMetadataPanel()}
 
-
-                        </div>
-                        : null}
-                      <div className={`${styles.emblaViewport}
-                            ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}
-                        ref={showModal ? emblaRef : null}>
-                        <div className={`
+                                {isMobile && showImgMetadataPanel ? (
+                                  <button
+                                    className={styles.imgMetadataCloseBtn}
+                                    onClick={() => {
+                                      setShowImgMetadataPanel(false);
+                                    }}
+                                  >
+                                    <XLg
+                                      size={24}
+                                      className={`${styles.lightboxjsIcon} ${
+                                        iconColor ? "" : getIconStyle()
+                                      }`}
+                                      color={iconColor ? iconColor : undefined}
+                                      style={
+                                        iconColor ? { color: iconColor } : {}
+                                      }
+                                    />
+                                  </button>
+                                ) : null}
+                              </div>
+                            )}
+                          </div>
+                        ) : null}
+                        <div
+                          className={`${styles.emblaViewport}
+                            ${
+                              displayImgMetadata
+                                ? styles.emblaContainerImgMetadata
+                                : ""
+                            }`}
+                          ref={showModal ? emblaRef : null}
+                        >
+                          <div
+                            className={`
                           ${imgAnimation == "fade" ? styles.imgfade : ""}
                           ${styles.emblaContainer}
-                            ${displayImgMetadata ? styles.emblaContainerImgMetadata : ""}`}>
-
-                          {regularImgPaneNodes}
-
+                            ${
+                              displayImgMetadata
+                                ? styles.emblaContainerImgMetadata
+                                : ""
+                            }`}
+                          >
+                            {regularImgPaneNodes}
+                          </div>
                         </div>
-                      </div>
 
-                      {isTextBox() ? (<div className={styles.textContainer}>
+                        {/* {isTextBox() ? (<div className={styles.textContainer}>
                         {getImageText()}
-                      </div>) : null}
-
-                    </div>
-
-                    {displayLoader == true && !isHTMLVideo(slideIndex) ? (
-                      <span
-                        key='loader'
-                        className={`${styles.loader
-                          } ${getLoaderThemeClass()}`}
-                      ></span>
-                    ) : null}
-                  </AnimatePresence>
-
-                  <div
-                    className={`${styles.thumbnailsOuterContainer} ${isImageCaption() ? styles.thumbnailsAndCaption : ''}
-                      ${displayImgMetadata ? styles.thumbnailsOuterContainerMetadata : ""} `}
-                    style={
-                      getThumbnailsOuterContainerStyle()
-                    }
-                  >
-                    {isImageCaption() ? (
-                      <div className={`${styles.imgTitleContainer} imageModal`}>
-                        <p
-                          className={`${styles.imgTitle}`}
-                          key={'imgCaption' + slideIndex}
-                          style={
-                            props.captionStyle
-                              ? props.captionStyle
-                              : { color: textColor }
-                          }
-                        >
-                          {getImageCaption()}
-                        </p>
+                      </div>) : null} */}
                       </div>
-                    ) : null}
 
-                    <AnimatePresence initial={animatedThumbnails}>
-                      {showThumbnails !== false && navigationDots !== true && (
-                        <motion.div
-                          initial={'hidden'}
-                          exit={'hidden'}
-                          animate={'visible'}
-                          style={
-                            imagesLoaded ? {} : { display: 'displayHidden' }
-                          }
-                          transition={{
-                            type: 'spring',
-                            duration: 0.75
-                          }}
-                          variants={thumbnailVariants}
-                          className={`${styles.thumbnails} ${isImageCaption()
-                            ? styles.thumbnailsWithCaption
-                            : ''
-                            }`}
-                        >
-                          <div className={`${styles.emblaThumbs} ${styles.thumbnails}`}>
-                            <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
-                              <div className={styles.emblaThumbsContainer}>
-                                {frameworkID == 'next' &&
-                                  props.images
-                                  ? props.images.map((img, index) => (
-                                    getImageThumbnail(img, index, true, props)
-                                  ))
-                                  : // Not Next.js
-                                  images.map((img, index) => (
-                                    getImageThumbnail(img, index, false, props)
-                                  ))}
-
-                              </div>
-                            </div>
-                          </div>
-
-                        </motion.div>
-                      )}
-
-                      {showThumbnails !== true && navigationDots !== false && (
-                        <motion.div
-                          initial={'hidden'}
-                          exit={'hidden'}
-                          animate={'visible'}
-                          style={
-                            imagesLoaded ? {} : { display: 'displayHidden' }
-                          }
-                          transition={{
-                            type: 'spring',
-                            duration: 0.75
-                          }}
-                          variants={thumbnailVariants}
-                          className={`${styles.thumbnails} ${isImageCaption()
-                            ? styles.thumbnailsWithCaption
-                            : ''
-                            }`}
-                        >
-                          <div className={`${styles.emblathumbs} ${styles.thumbnails}`}>
-                            <div className={styles.emblaThumbsViewport} ref={emblaThumbsRef}>
-                              <div className={`${styles.navigationDots} ${styles.emblaThumbsContainer} imageModal
-                                `}>
-                                {frameworkID == 'next' &&
-                                  props.images
-                                  ? props.images.map((img, index) => (
-                                    getNavigationDot(index)
-                                  ))
-                                  : // Not Next.js
-                                  images.map((img, index) => (
-                                    getNavigationDot(index)
-                                  ))}
-
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
+                      {displayLoader == true && !isHTMLVideo(slideIndex) ? (
+                        <span
+                          key="loader"
+                          className={`${
+                            styles.loader
+                          } ${getLoaderThemeClass()}`}
+                        ></span>
+                      ) : null}
                     </AnimatePresence>
+
+                    <div
+                      className={`${styles.thumbnailsOuterContainer} ${
+                        isImageCaption() ? styles.thumbnailsAndCaption : ""
+                      }
+                      ${
+                        displayImgMetadata
+                          ? styles.thumbnailsOuterContainerMetadata
+                          : ""
+                      } `}
+                      style={getThumbnailsOuterContainerStyle()}
+                    >
+                      {isImageCaption() ? (
+                        <div
+                          className={`${styles.imgTitleContainer} imageModal`}
+                        >
+                          <p
+                            className={`${styles.imgTitle}`}
+                            key={"imgCaption" + slideIndex}
+                            style={
+                              props.captionStyle
+                                ? props.captionStyle
+                                : { color: textColor }
+                            }
+                          >
+                            {getImageCaption()}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      <AnimatePresence initial={animatedThumbnails}>
+                        {showThumbnails !== false &&
+                          navigationDots !== true && (
+                            <motion.div
+                              initial={"hidden"}
+                              exit={"hidden"}
+                              animate={"visible"}
+                              style={
+                                imagesLoaded ? {} : { display: "displayHidden" }
+                              }
+                              transition={{
+                                type: "spring",
+                                duration: 0.75,
+                              }}
+                              variants={thumbnailVariants}
+                              className={`${styles.thumbnails} ${
+                                isImageCaption()
+                                  ? styles.thumbnailsWithCaption
+                                  : ""
+                              }`}
+                            >
+                              <div
+                                className={`${styles.emblaThumbs} ${styles.thumbnails}`}
+                              >
+                                <div
+                                  className={styles.emblaThumbsViewport}
+                                  ref={emblaThumbsRef}
+                                >
+                                  <div className={styles.emblaThumbsContainer}>
+                                    {frameworkID == "next" && props.images
+                                      ? props.images.map((img, index) =>
+                                          getImageThumbnail(
+                                            img,
+                                            index,
+                                            true,
+                                            props
+                                          )
+                                        )
+                                      : // Not Next.js
+                                        images.map((img, index) =>
+                                          getImageThumbnail(
+                                            img,
+                                            index,
+                                            false,
+                                            props
+                                          )
+                                        )}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+
+                        {showThumbnails !== true &&
+                          navigationDots !== false && (
+                            <motion.div
+                              initial={"hidden"}
+                              exit={"hidden"}
+                              animate={"visible"}
+                              style={
+                                imagesLoaded ? {} : { display: "displayHidden" }
+                              }
+                              transition={{
+                                type: "spring",
+                                duration: 0.75,
+                              }}
+                              variants={thumbnailVariants}
+                              className={`${styles.thumbnails} ${
+                                isImageCaption()
+                                  ? styles.thumbnailsWithCaption
+                                  : ""
+                              }`}
+                            >
+                              <div
+                                className={`${styles.emblathumbs} ${styles.thumbnails}`}
+                              >
+                                <div
+                                  className={styles.emblaThumbsViewport}
+                                  ref={emblaThumbsRef}
+                                >
+                                  <div
+                                    className={`${styles.navigationDots} ${styles.emblaThumbsContainer} imageModal
+                                `}
+                                  >
+                                    {frameworkID == "next" && props.images
+                                      ? props.images.map((img, index) =>
+                                          getNavigationDot(index)
+                                        )
+                                      : // Not Next.js
+                                        images.map((img, index) =>
+                                          getNavigationDot(index)
+                                        )}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                      </AnimatePresence>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
+                {/* Here is the right sideBar component */}
+                {/* {rightSidebarComponent} */}
+                {isTextBox() ? (
+                  <div className={styles.textContainer}>{getImageText()}</div>
+                ) : null}{" "}
               </motion.div>
-              {rightSidebarComponent}
-
-            </motion.div>
-
-
-          </Div100vh>
-        </Portal>
-      )}
-    </AnimatePresence>
-    {/* </AnimateSharedLayout> */}
-  </div>
+            </Div100vh>
+          </Portal>
+        )}
+      </AnimatePresence>
+      {/* </AnimateSharedLayout> */}
+    </div>
+  );
 }
 )
